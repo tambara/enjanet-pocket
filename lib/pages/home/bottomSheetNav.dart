@@ -88,46 +88,49 @@ class BottomSheetNav extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return DefaultTabController(
-      length: 3, // タブの数
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text(
-            "ナビゲーション",
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          centerTitle: true,
-          automaticallyImplyLeading: false,
-          backgroundColor: Theme.of(context).bottomSheetTheme.backgroundColor,
-          bottom: const TabBar(
-            tabs: [
-              Tab(text: "目的"),
-              Tab(text: "種別"),
-              Tab(text: "その他"),
-            ],
-          ),
-          actions: [
-            if (enableClose)
-              IconButton(
-                  icon: const FaIcon(
-                    FontAwesomeIcons.xmark,
-                  ),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  }),
-          ],
-        ),
-        body: Container(
-            color: Theme.of(context).bottomSheetTheme.backgroundColor,
-            child: TabBarView(
-              children: [
-                _buildPurposeTab(context, ref),
-                _buildCategoryTab(context, ref),
-                _buildSearchTab(context, ref),
+    return PopScope(
+        canPop: enableClose,
+        child: DefaultTabController(
+          length: 3, // タブの数
+          child: Scaffold(
+            appBar: AppBar(
+              title: const Text(
+                "ナビゲーション",
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              centerTitle: true,
+              automaticallyImplyLeading: false,
+              backgroundColor:
+                  Theme.of(context).bottomSheetTheme.backgroundColor,
+              bottom: const TabBar(
+                tabs: [
+                  Tab(text: "目的"),
+                  Tab(text: "種別"),
+                  Tab(text: "その他"),
+                ],
+              ),
+              actions: [
+                if (enableClose)
+                  IconButton(
+                      icon: const FaIcon(
+                        FontAwesomeIcons.xmark,
+                      ),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      }),
               ],
-            )),
-      ),
-    );
+            ),
+            body: Container(
+                color: Theme.of(context).bottomSheetTheme.backgroundColor,
+                child: TabBarView(
+                  children: [
+                    _buildPurposeTab(context, ref),
+                    _buildCategoryTab(context, ref),
+                    _buildSearchTab(context, ref),
+                  ],
+                )),
+          ),
+        ));
   }
 
   Color getColor(BottomSheetNavColors thema, ProviderCategory p) {
