@@ -4,7 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <application
-        android:label="enjanet_pocket"
+        android:label="え〜んじゃネットポケット"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
