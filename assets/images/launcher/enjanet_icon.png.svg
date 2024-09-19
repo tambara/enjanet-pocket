@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   viewBox="0 0 100 100"
+   version="1.1"
+   id="svg17"
+   sodipodi:docname="icon.svg"
+   inkscape:version="1.3.2 (1:1.3.2+202404261509+091e20ef0f)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs17">
+    <filter
+       id="dropShadow"
+       x="-0.097680098"
+       y="-0.091954023"
+       width="1.1953602"
+       height="1.2222222">
+      <feGaussianBlur
+         in="SourceAlpha"
+         stdDeviation="2"
+         id="feGaussianBlur2" />
+      <feOffset
+         dx="0"
+         dy="2"
+         result="offsetblur"
+         id="feOffset2" />
+      <feComponentTransfer
+         id="feComponentTransfer2">
+        <feFuncA
+           type="linear"
+           slope="0.2"
+           id="feFuncA2" />
+      </feComponentTransfer>
+      <feMerge
+         id="feMerge3">
+        <feMergeNode
+           id="feMergeNode2" />
+        <feMergeNode
+           in="SourceGraphic"
+           id="feMergeNode3" />
+      </feMerge>
+    </filter>
+    <linearGradient
+       id="bgGradient"
+       x1="0"
+       y1="0"
+       x2="100"
+       y2="100"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(5.7599532e-4,2.1395e-4)">
+      <stop
+         offset="0"
+         style="stop-color:#ffffff;stop-opacity:1;"
+         id="stop1" />
+      <stop
+         offset="1"
+         style="stop-color:#d9d9d9;stop-opacity:1;"
+         id="stop2" />
+    </linearGradient>
+  </defs>
+  <sodipodi:namedview
+     id="namedview17"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="4"
+     inkscape:cx="-32.125"
+     inkscape:cy="38.75"
+     inkscape:window-width="1920"
+     inkscape:window-height="1016"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg17" />
+  <path
+     d="M 20.000003,9.5e-7 C 8.9200153,9.5e-7 3.9953125e-6,8.9200107 3.9953125e-6,19.999999 V 80 C 3.9953125e-6,91.07999 8.9200153,99.999999 20.000003,99.999999 H 80.000004 C 91.079993,99.999999 99.999996,91.07999 99.999996,80 V 19.999999 C 99.999996,8.9200107 91.079993,9.5e-7 80.000004,9.5e-7 Z"
+     style="fill:url(#bgGradient)"
+     id="path22" />
+  <g
+     transform="translate(10, 10)"
+     id="g17">
+    <rect
+       x="0"
+       y="0"
+       width="20"
+       height="20"
+       fill="#E53935"
+       id="rect2" />
+    <!-- Red -->
+    <rect
+       x="20"
+       y="0"
+       width="20"
+       height="20"
+       fill="#1E88E5"
+       id="rect3" />
+    <!-- Blue -->
+    <rect
+       x="40"
+       y="0"
+       width="20"
+       height="20"
+       fill="#43A047"
+       id="rect4" />
+    <!-- Green -->
+    <rect
+       x="60"
+       y="0"
+       width="20"
+       height="20"
+       fill="#FDD835"
+       id="rect5" />
+    <!-- Yellow -->
+    <rect
+       x="0"
+       y="20"
+       width="20"
+       height="20"
+       fill="#8E24AA"
+       id="rect6" />
+    <!-- Purple -->
+    <rect
+       x="20"
+       y="20"
+       width="20"
+       height="20"
+       fill="#00897B"
+       id="rect7" />
+    <!-- Teal -->
+    <rect
+       x="40"
+       y="20"
+       width="20"
+       height="20"
+       fill="#F4511E"
+       id="rect8" />
+    <!-- Deep Orange -->
+    <rect
+       x="60"
+       y="20"
+       width="20"
+       height="20"
+       fill="#00ACC1"
+       id="rect9" />
+    <!-- Cyan -->
+    <rect
+       x="0"
+       y="40"
+       width="20"
+       height="20"
+       fill="#5E35B1"
+       id="rect10" />
+    <!-- Deep Purple -->
+    <rect
+       x="20"
+       y="40"
+       width="20"
+       height="20"
+       fill="#7CB342"
+       id="rect11" />
+    <!-- Light Green -->
+    <rect
+       x="40"
+       y="40"
+       width="20"
+       height="20"
+       fill="#FB8C00"
+       id="rect12" />
+    <!-- Orange -->
+    <rect
+       x="60"
+       y="40"
+       width="20"
+       height="20"
+       fill="#C0CA33"
+       id="rect13" />
+    <!-- Lime -->
+    <rect
+       x="0"
+       y="60"
+       width="20"
+       height="20"
+       fill="#3949AB"
+       id="rect14" />
+    <!-- Indigo -->
+    <rect
+       x="20"
+       y="60"
+       width="20"
+       height="20"
+       fill="#8D6E63"
+       id="rect15" />
+    <!-- Brown -->
+    <rect
+       x="40"
+       y="60"
+       width="20"
+       height="20"
+       fill="#546E7A"
+       id="rect16" />
+    <!-- Blue Grey -->
+    <rect
+       x="60"
+       y="60"
+       width="20"
+       height="20"
+       fill="#EC407A"
+       id="rect17" />
+    <!-- Pink -->
+  </g>
+  <g
+     filter="url(#dropShadow)"
+     id="g20"
+     transform="translate(-0.62999963,6.5600003)"
+     style="fill:#f9f9f9">
+    <text
+       x="50"
+       y="65"
+       font-family="'Arial Black', sans-serif"
+       font-size="60px"
+       font-weight="bold"
+       text-anchor="middle"
+       fill="#333333"
+       id="text19"
+       style="fill:#f9f9f9">え</text>
+  </g>
+</svg>
