@@ -180,165 +180,179 @@ class DetailPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // final bookmarkStream = userDb?.watchBookmark(itemId, type);
 
-    return Scaffold(
-        // backgroundColor: Colors.white, // HEXカラーコードを使用
-        body: FutureBuilder<DetailData?>(
+    return FutureBuilder<DetailData?>(
       future: makeDetail(context, ref, itemId, type),
       builder: (BuildContext context, AsyncSnapshot<DetailData?> snapshot) {
         if (snapshot.hasData) {
           var items = snapshot.data!;
           var entries = items.widgets.entries.toList();
 
-          return DefaultTabController(
-              length: 2,
-              child: NestedScrollView(
-                headerSliverBuilder:
-                    (BuildContext context, bool innerBoxIsScrolled) {
-                  return [
-                    SliverAppBar(
-                      pinned: true,
-                      title: Row(
-                        children: [
-                          // getCycleAvatarFromTableType(type, 18),
-                          // const SizedBox(
-                          //   width: 10,
-                          // ),
-                          Expanded(
-                            child: Text(items.title,
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold)),
+          return Scaffold(
+              bottomNavigationBar: BottomAppBar(
+                height: 50,
+                notchMargin: 0,
+                elevation: 0,
+                padding: EdgeInsets.zero,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  // mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TextButton.icon(
+                        label: Text("印刷する"),
+                        onPressed: () async {
+                          Uint8List? mapImage;
+                          if (items.latlang != null) {
+                            final r =
+                                await showDialog<MapConfirmationDialogResult?>(
+                              context: context,
+                              builder: (context) =>
+                                  MapConfirmationDialog(latlng: items.latlang!),
+                            );
+                            if (r == null) {
+                              return;
+                            }
+                            mapImage = r.image;
+                          }
+                          await _printAdvancedDocument(items.title, context,
+                              ref, itemId, type, mapImage);
+                        },
+                        icon: const FaIcon(
+                          FontAwesomeIcons.print,
+                          color: Colors.blue,
+                        )),
+                    TextButton.icon(
+                        label: Text("え〜んじゃネットへ"),
+                        onPressed: () async {
+                          if (await showOkCancel(
+                                  context, "え〜んじゃネットにアクセスしますか？") ==
+                              true) {
+                            // 外部リンクを開く
+                            final url = p.normalize(
+                                "${Env.enjanetUrl}/${items.pageUrl}");
+
+                            await launchUrl(Uri.parse(url));
+                          }
+                        },
+                        icon: const FaIcon(
+                          color: Colors.blue,
+                          FontAwesomeIcons.globe,
+                        )), // IconButton(
+                  ],
+                ),
+              ),
+              body: DefaultTabController(
+                  length: 2,
+                  child: NestedScrollView(
+                    headerSliverBuilder:
+                        (BuildContext context, bool innerBoxIsScrolled) {
+                      return [
+                        SliverAppBar(
+                          pinned: true,
+                          title: Row(
+                            children: [
+                              // getCycleAvatarFromTableType(type, 18),
+                              // const SizedBox(
+                              //   width: 10,
+                              // ),
+                              Expanded(
+                                child: Text(items.title,
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.bold)),
+                              ),
+
+                              Consumer(
+                                builder: (BuildContext context, WidgetRef ref,
+                                    Widget? child) {
+                                  final bookmark = ref.watch(bookmarkProvider(
+                                      (itemId: itemId, table: type)));
+
+                                  return bookmark != null
+                                      ? IconButton(
+                                          // iconSize: 24 * 0.9,
+                                          visualDensity: const VisualDensity(),
+                                          onPressed: () {
+                                            final bookmarkNotifier = ref.read(
+                                                bookmarkProvider((
+                                              itemId: itemId,
+                                              table: type
+                                            )).notifier);
+                                            bookmarkNotifier.toggleBookmark();
+                                          },
+                                          icon: Icon(
+                                            bookmark
+                                                ? FontAwesomeIcons.solidBookmark
+                                                : FontAwesomeIcons.bookmark,
+                                            color: Colors.blue,
+                                          ))
+                                      : const Text("");
+                                },
+                              ),
+                            ],
                           ),
-
-                          IconButton(
-                              onPressed: () async {
-                                Uint8List? mapImage;
-                                if (items.latlang != null) {
-                                  final r = await showDialog<
-                                      MapConfirmationDialogResult?>(
-                                    context: context,
-                                    builder: (context) => MapConfirmationDialog(
-                                        latlng: items.latlang!),
-                                  );
-                                  if (r == null) {
-                                    return;
-                                  }
-                                  mapImage = r.image;
-                                }
-                                await _printAdvancedDocument(items.title,
-                                    context, ref, itemId, type, mapImage);
-                              },
-                              icon: const FaIcon(
-                                FontAwesomeIcons.print,
-                                color: Colors.blue,
-                              )),
-                          IconButton(
-                              onPressed: () async {
-                                if (await showOkCancel(
-                                        context, "え〜んじゃネットにアクセスしますか？") ==
-                                    true) {
-                                  // 外部リンクを開く
-                                  final url = p.normalize(
-                                      "${Env.enjanetUrl}/${items.pageUrl}");
-
-                                  await launchUrl(Uri.parse(url));
-                                }
-                              },
-                              color: Colors.blue,
-                              icon: const FaIcon(
-                                FontAwesomeIcons.globe,
-                              )), // IconButton(
-
-                          Consumer(
-                            builder: (BuildContext context, WidgetRef ref,
-                                Widget? child) {
-                              final bookmark = ref.watch(bookmarkProvider(
-                                  (itemId: itemId, table: type)));
-
-                              return bookmark != null
-                                  ? IconButton(
-                                      // iconSize: 24 * 0.9,
-                                      visualDensity: const VisualDensity(),
-                                      onPressed: () {
-                                        final bookmarkNotifier = ref.read(
-                                            bookmarkProvider((
-                                          itemId: itemId,
-                                          table: type
-                                        )).notifier);
-                                        bookmarkNotifier.toggleBookmark();
-                                      },
-                                      icon: Icon(
-                                        bookmark
-                                            ? FontAwesomeIcons.solidBookmark
-                                            : FontAwesomeIcons.bookmark,
-                                        color: Colors.blue,
-                                      ))
-                                  : const Text("");
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-                    // buildTab(),
-                  ];
-                },
-                // body: TabBarView(children: [
-                body: ListView(children: [
-                  const SizedBox(height: 20),
-                  const Text(
-                    "事業所情報",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                  ),
-                  const SizedBox(height: 20),
-                  // buildDetail(makeDetail(context, ref, itemId, type)),
-                  ListView.separated(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemBuilder: (BuildContext context, int index) {
-                      final e = entries[index];
-                      return buildLine(e.key, e.value);
+                        ),
+                        // buildTab(),
+                      ];
                     },
-                    separatorBuilder: (BuildContext context, int index) {
-                      return Divider(
+                    // body: TabBarView(children: [
+                    body: ListView(children: [
+                      const SizedBox(height: 20),
+                      const Text(
+                        "事業所情報",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 20),
+                      ),
+                      const SizedBox(height: 20),
+                      // buildDetail(makeDetail(context, ref, itemId, type)),
+                      ListView.separated(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemBuilder: (BuildContext context, int index) {
+                          final e = entries[index];
+                          return buildLine(e.key, e.value);
+                        },
+                        separatorBuilder: (BuildContext context, int index) {
+                          return Divider(
+                            height: 1,
+                            indent: 16,
+                            endIndent: 16,
+                            color: Colors.grey[200],
+                          );
+                        },
+                        itemCount: entries.length,
+                      ),
+                      Divider(
                         height: 1,
                         indent: 16,
                         endIndent: 16,
                         color: Colors.grey[200],
-                      );
-                    },
-                    itemCount: entries.length,
-                  ),
-                  Divider(
-                    height: 1,
-                    indent: 16,
-                    endIndent: 16,
-                    color: Colors.grey[200],
-                  ),
-                  const SizedBox(height: 20),
-                  const Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 16,
-                    ),
-                    child: Text(
-                        "※空白（または-）部分は事業所からの情報を頂いておりません。詳細につきましては直接事業所にお問い合わせください"),
-                  ),
-                  const SizedBox(height: 20),
+                      ),
+                      const SizedBox(height: 20),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 16,
+                        ),
+                        child: Text(
+                            "※空白（または-）部分は事業所からの情報を頂いておりません。詳細につきましては直接事業所にお問い合わせください"),
+                      ),
+                      const SizedBox(height: 20),
 
-                  const Text(
-                    "周辺地図",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                  ),
+                      const Text(
+                        "周辺地図",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 20),
+                      ),
 
-                  const SizedBox(height: 20),
-                  Container(
-                      height: 400,
-                      color: Colors.grey[200],
-                      child: (items.latlang != null) // 緯度経度が未入力なら 未入力 を表示
-                          ? buildMap(context, ref, items.latlang!)
-                          : const Text("未入力")),
-                ]),
-              ));
+                      const SizedBox(height: 20),
+                      Container(
+                          height: 400,
+                          color: Colors.grey[200],
+                          child: (items.latlang != null) // 緯度経度が未入力なら 未入力 を表示
+                              ? buildMap(context, ref, items.latlang!)
+                              : const Text("未入力")),
+                    ]),
+                  )));
           //  buildDetail(appDb),
         } else if (snapshot.hasError) {
           return buildError(
@@ -348,7 +362,7 @@ class DetailPage extends ConsumerWidget {
           child: CircularProgressIndicator(),
         );
       },
-    ));
+    );
   }
 }
 
