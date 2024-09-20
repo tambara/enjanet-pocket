@@ -99,19 +99,14 @@ class AppData {
     Directory directory;
 
     if (Platform.isLinux) {
-      directory = await getApplicationSupportDirectory();
     } else if (Platform.isWindows) {
       // directory = await getApplicationSupportDirectory();
-      return p.join(Directory(Platform.resolvedExecutable).parent.path,
-          packageInfo.packageName);
+      // return path.join(Directory(Platform.resolvedExecutable).parent.path,
+      //       packageInfo.packageName);
     } else if (Platform.isAndroid) {
-      directory = await getApplicationSupportDirectory();
     } else if (Platform.isIOS) {
       // directory = await getLibraryDirectory();
-      directory = await getApplicationSupportDirectory();
-    } else if (Platform.isMacOS) {
-      directory = await getApplicationSupportDirectory();
-    }
+    } else if (Platform.isMacOS) {}
 
     directory = await getApplicationSupportDirectory();
     return directory.path;
