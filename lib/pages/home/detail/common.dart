@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:enjanet_pocket/thema/color.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -43,25 +44,29 @@ Widget buildPhoto(BuildContext context, String? text, String pageUrl) {
   ]);
 }
 
-Widget buildSpecificDisability(String? text) {
+Widget buildSpecificDisability(BuildContext context, String? text) {
   if (text == null || text.trim().isEmpty) return const SelectableText('-');
+
+  final thema = Theme.of(context).extension<DetailsColors>();
+  if (thema == null) {
+    throw Exception("DetailsColors is null");
+  }
+
   return Wrap(
       children: text.split("||").map((e) {
     Color color = Colors.grey;
 
-    double saturation = 0.99;
-    double light = 0.80;
     switch (e) {
       case "身体":
-        color = HSLColor.fromAHSL(1.0, 120.0, saturation, light).toColor();
+        color = thema.physicalDisabilityColor;
       case "知的":
-        color = HSLColor.fromAHSL(1.0, 0.0, saturation, light).toColor(); // 赤
+        color = thema.intellectualDisabilityColor;
       case "精神":
-        color = HSLColor.fromAHSL(1.0, 240.0, saturation, light).toColor(); // 赤
+        color = thema.mentalDisabilityColor;
       case "児童":
-        color = HSLColor.fromAHSL(1.0, 60.0, saturation, light).toColor(); // 赤
+        color = thema.childDisabilityColor;
       case "難病":
-        color = HSLColor.fromAHSL(1.0, 270.0, saturation, light).toColor(); // 紫
+        color = thema.intractableDiseaseColor;
     }
     return Container(
       margin: const EdgeInsets.only(right: 5),

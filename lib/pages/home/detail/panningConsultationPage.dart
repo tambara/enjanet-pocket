@@ -37,7 +37,7 @@ Future<DetailData?> buildPlanningConsultation(
         '住所': buildText(data.address),
         '電話番号': buildText(data.phoneNumber),
         'FAX': buildText(data.fax),
-        '障害の特定': buildSpecificDisability(data.specificDisability),
+        '障害の特定': buildSpecificDisability(context, data.specificDisability),
         '地域移行支援・地域定着支援':
             buildPresenceAbsenceWidget(data.regionalTransitionSupport),
         '事業実施地域': buildText(data.businessImplementationRegion),

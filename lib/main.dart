@@ -17,7 +17,6 @@ import 'package:sqlite3/open.dart';
 import 'package:windows_single_instance/windows_single_instance.dart';
 import 'datas/appdata.dart';
 
-
 void main(List<String> args) async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -71,6 +70,17 @@ BottomSheetNavColors _buildBottomSheetNavColors(int v) {
   );
 }
 
+DetailsColors _buildDetailsColors(int v) {
+  final colors = DisabilityColors(v);
+  return DetailsColors(
+    physicalDisabilityColor: colors.physical(),
+    intellectualDisabilityColor: colors.intellectual(),
+    mentalDisabilityColor: colors.mental(),
+    childDisabilityColor: colors.child(),
+    intractableDiseaseColor: colors.intractableDisease(),
+  );
+}
+
 ThemeData _buildDarkTheme() {
   final ThemeData base = ThemeData.dark(
     useMaterial3: true,
@@ -78,6 +88,7 @@ ThemeData _buildDarkTheme() {
   return base.copyWith(
     extensions: [
       _buildBottomSheetNavColors(700),
+      _buildDetailsColors(700),
     ],
   );
 }
@@ -94,6 +105,7 @@ ThemeData _buildLightTheme() {
   return base.copyWith(
     extensions: [
       _buildBottomSheetNavColors(300),
+      _buildDetailsColors(300),
     ],
   );
 }

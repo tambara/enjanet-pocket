@@ -89,6 +89,11 @@ class _SettingsMapDownloadPage extends ConsumerState<SettingsDownloadPage> {
         return Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            const Text("ダウンロード中"),
+            const SizedBox(
+              height: 10,
+            ),
+            Text("${e.bytesReceived!} / ${e.totalBytes}"),
             buildProgressIndicator(progress),
             const SizedBox(
               height: 10,

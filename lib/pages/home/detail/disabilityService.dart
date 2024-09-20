@@ -17,7 +17,7 @@ Future<DetailData?> buildDisabilityService(
     BuildContext context, WidgetRef ref, int itemId) async {
   // TODO: implement buildMap
   final db = ref.watch(enjanetDbProvider);
-  final data = await db?.getFirstDisabilityServiceByItemId(itemId);
+  final data = db?.getFirstDisabilityServiceByItemId(itemId);
   if (data == null) return null;
 
   // leading: result.service.eyecatch != null
@@ -67,7 +67,7 @@ Future<Map<String, pw.Widget>?> buildDisabilityServicePdf(
     BuildContext context, WidgetRef ref, int itemId) async {
   // TODO: implement buildMap
   final db = ref.watch(enjanetDbProvider);
-  final data = await db?.getFirstDisabilityServiceByItemId(itemId);
+  final data = db?.getFirstDisabilityServiceByItemId(itemId);
   if (data == null) return null;
 
   return <String, pw.Widget>{

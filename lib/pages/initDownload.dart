@@ -79,10 +79,16 @@ class _DbDownloadPageState extends ConsumerState<DbDownloadPage> {
       case TaskState.downloading:
         double progress =
             e.totalBytes! == -1 ? 0.0 : e.bytesReceived! / e.totalBytes!;
+
         return Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Text("ダウンロード中"),
+            const SizedBox(
+              height: 10,
+            ),
+            Text(
+                "${e.bytesReceived! ~/ 1024 ~/ 1024}MB / ${e.totalBytes! ~/ 1024 ~/ 1024}MB}"),
             const SizedBox(
               height: 10,
             ),

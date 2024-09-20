@@ -9,6 +9,7 @@ import 'package:enjanet_pocket/datas/env.dart';
 
 Widget buildSpecificDisabilityPdf(String? text) {
   if (text == null) return Text('-');
+
   return Row(
       children: text.split("||").map((e) {
     PdfColor color = PdfColors.grey;
@@ -31,11 +32,11 @@ Widget buildSpecificDisabilityPdf(String? text) {
       margin: const EdgeInsets.only(right: 5),
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       decoration: BoxDecoration(
-        borderRadius: const BorderRadius.all(Radius.circular(32)),
-        border: Border.all(
-          width: 2,
-          color: PdfColors.white,
-        ),
+        // borderRadius: const BorderRadius.all(Radius.circular(32)),
+        // border: Border.all(
+        //   width: 2,
+        //   color: PdfColors.white,
+        // ),
         color: color,
       ),
       child: Text(e,

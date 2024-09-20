@@ -259,7 +259,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
     return SettingsTile(
         title: Text('オフラインマップのダウンロードと更新確認'),
         leading: const FaIcon(FontAwesomeIcons.database),
-        description: Text(""),
+        description: Text(status),
         // ダウンロード進行状況を表示する
         trailing: const FaIcon(FontAwesomeIcons.chevronRight),
         // ダウンロードが開始しているならクリックさせない

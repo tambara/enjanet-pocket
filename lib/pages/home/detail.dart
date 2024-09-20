@@ -1,5 +1,4 @@
 // Dart imports:
-import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'dart:ui';
 
@@ -16,7 +15,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:path/path.dart' as p;
 import 'package:pdf/pdf.dart';
-import 'package:pdf/src/pdf/colors.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -201,10 +199,10 @@ class DetailPage extends ConsumerWidget {
                       pinned: true,
                       title: Row(
                         children: [
-                          getCycleAvatarFromTableType(type, 18),
-                          const SizedBox(
-                            width: 10,
-                          ),
+                          // getCycleAvatarFromTableType(type, 18),
+                          // const SizedBox(
+                          //   width: 10,
+                          // ),
                           Expanded(
                             child: Text(items.title,
                                 style: const TextStyle(
@@ -258,7 +256,7 @@ class DetailPage extends ConsumerWidget {
 
                               return bookmark != null
                                   ? IconButton(
-                                      iconSize: 24 * 0.9,
+                                      // iconSize: 24 * 0.9,
                                       visualDensity: const VisualDensity(),
                                       onPressed: () {
                                         final bookmarkNotifier = ref.read(
@@ -317,11 +315,11 @@ class DetailPage extends ConsumerWidget {
                     color: Colors.grey[200],
                   ),
                   const SizedBox(height: 20),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
+                  const Padding(
+                    padding: EdgeInsets.symmetric(
                       horizontal: 16,
                     ),
-                    child: const Text(
+                    child: Text(
                         "※空白（または-）部分は事業所からの情報を頂いておりません。詳細につきましては直接事業所にお問い合わせください"),
                   ),
                   const SizedBox(height: 20),
