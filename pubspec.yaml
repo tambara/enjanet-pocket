@@ -76,6 +76,7 @@ dependencies:
   flutter_settings_ui: ^3.0.1
   path: ^1.9.0
   windows_single_instance: ^1.0.1
+  tutorial_coach_mark: ^1.2.11
 dev_dependencies:
   flutter_test:
     sdk: flutter

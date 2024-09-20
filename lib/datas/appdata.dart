@@ -102,8 +102,8 @@ class AppData {
       directory = await getApplicationSupportDirectory();
     } else if (Platform.isWindows) {
       // directory = await getApplicationSupportDirectory();
-      // return path.join(Directory(Platform.resolvedExecutable).parent.path,
-      //       packageInfo.packageName);
+      return p.join(Directory(Platform.resolvedExecutable).parent.path,
+          packageInfo.packageName);
     } else if (Platform.isAndroid) {
       directory = await getApplicationSupportDirectory();
     } else if (Platform.isIOS) {
