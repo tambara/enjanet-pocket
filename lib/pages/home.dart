@@ -1,4 +1,8 @@
 // Flutter imports:
+import 'dart:ui';
+
+import 'package:enjanet_pocket/db/db.dart';
+import 'package:enjanet_pocket/providers/userdb.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -10,6 +14,7 @@ import 'package:enjanet_pocket/datas/search_criteria.dart';
 import 'package:enjanet_pocket/pages/home/bottomSheetNav.dart';
 import 'package:enjanet_pocket/pages/home/list.dart';
 import 'package:enjanet_pocket/pages/home/map.dart';
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -19,7 +24,7 @@ class HomeScreen extends ConsumerStatefulWidget {
   }
 }
 
-class _HomeScreenState extends ConsumerState<HomeScreen> {
+class _HomeScreenState extends ConsumerState<HomeScreen> with HomeTutorial {
   final TextEditingController _searchController = TextEditingController();
   final List<String> _searchOptions = [
     '事業所名', /*'Full Text', 'Tag', 'Author'*/
@@ -31,9 +36,35 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   void initState() {
     super.initState();
 
+    final userDb = ref.read(userDbProvider);
+    if (userDb == null) {
+      throw Exception("UserDb is null");
+    }
+
+    createTutorial(userDb!);
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       showHomeBottomSheetWidget(context, false);
     });
+  }
+
+  void showHomeBottomSheetWidget(
+      BuildContext context, bool isDismissibleAndEnableDrag) async {
+    await showModalBottomSheet(
+      context: context,
+      isDismissible: isDismissibleAndEnableDrag, // 画面外タップでの閉じを無効化
+      enableDrag: isDismissibleAndEnableDrag, // ドラッグでの閉じを無効化
+      constraints: const BoxConstraints.expand(),
+      builder: (BuildContext context) {
+        return BottomSheetNav(enableClose: isDismissibleAndEnableDrag);
+      },
+    );
+
+    if (isDismissibleAndEnableDrag == false) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        showTutorial(context);
+      });
+    }
   }
 
   @override
@@ -56,6 +87,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         ),
         actions: [
           IconButton(
+            key: _navButtonKey,
             icon: const FaIcon(FontAwesomeIcons.bars),
             onPressed: () {
               showHomeBottomSheetWidget(context, true);
@@ -194,5 +226,75 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         ),
       ],
     );
+  }
+}
+
+mixin HomeTutorial {
+  late TutorialCoachMark tutorialCoachMark;
+
+  String? homeTutorial;
+  final GlobalKey _navButtonKey = GlobalKey();
+
+  List<TargetFocus> _createTargets() {
+    List<TargetFocus> targets = [];
+    targets.add(
+      TargetFocus(
+        identify: "_navButtonKey",
+        keyTarget: _navButtonKey,
+        contents: [
+          TargetContent(
+            child: const Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "ヒント",
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      fontSize: 20.0),
+                ),
+                Padding(
+                    padding: EdgeInsets.only(top: 10.0),
+                    child: Text("ここから再度、ナビゲーションを表示できます",
+                        style: TextStyle(color: Colors.white))),
+              ],
+            ),
+          )
+        ],
+        shape: ShapeLightFocus.RRect,
+        radius: 5,
+      ),
+    );
+    return targets;
+  }
+
+  void createTutorial(UserDatabase userDb) {
+    homeTutorial = userDb.getSetting("home_tutorial");
+
+    tutorialCoachMark = TutorialCoachMark(
+      targets: _createTargets(),
+      colorShadow: Colors.black,
+      textSkip: "スキップ",
+      paddingFocus: 10,
+      opacityShadow: 0.5,
+      imageFilter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+      onFinish: () {
+        userDb.upsertSetting("home_tutorial", "1");
+        homeTutorial = "1";
+      },
+      onClickTarget: (target) {},
+      onClickTargetWithTapPosition: (target, tapDetails) {},
+      onClickOverlay: (target) {},
+      onSkip: () {
+        return false;
+      },
+    );
+  }
+
+  void showTutorial(BuildContext context) {
+    if (homeTutorial != "0") {
+      tutorialCoachMark.show(context: context);
+    }
   }
 }

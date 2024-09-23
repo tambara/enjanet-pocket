@@ -14,19 +14,6 @@ import 'package:enjanet_pocket/datas/env.dart';
 import 'package:enjanet_pocket/datas/search_criteria.dart';
 import '../../datas/appdata.dart';
 
-void showHomeBottomSheetWidget(
-    BuildContext context, bool isDismissibleAndEnableDrag) {
-  showModalBottomSheet(
-    context: context,
-    isDismissible: isDismissibleAndEnableDrag, // 画面外タップでの閉じを無効化
-    enableDrag: isDismissibleAndEnableDrag, // ドラッグでの閉じを無効化
-    constraints: const BoxConstraints.expand(),
-    builder: (BuildContext context) {
-      return BottomSheetNav(enableClose: isDismissibleAndEnableDrag);
-    },
-  );
-}
-
 class BottomSheetNavLayoutData {
   final int crossAxisCount;
   final double mainAxisSpacing;
