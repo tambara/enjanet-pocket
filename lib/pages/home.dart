@@ -293,7 +293,7 @@ mixin HomeTutorial {
   }
 
   void showTutorial(BuildContext context) {
-    if (homeTutorial != "0") {
+    if (homeTutorial != "1") {
       tutorialCoachMark.show(context: context);
     }
   }
