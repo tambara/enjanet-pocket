@@ -22,9 +22,6 @@ abstract class Env {
   @EnviedField(varName: 'USER_DB_PASS', obfuscate: true)
   static final String userDbPass = _Env.userDbPass;
 
-  @EnviedField(varName: 'ENJANET_DATA_URL')
-  static const String enjanetDataUrl = _Env.enjanetDataUrl;
-
   @EnviedField(varName: 'ENJANET_ENJANET_JSON_NAME')
   static const String enjanetEnjanetJsonName = _Env.enjanetEnjanetJsonName;
 

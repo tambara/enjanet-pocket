@@ -23,7 +23,6 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:enjanet_pocket/datas/env.dart';
 import 'package:enjanet_pocket/providers/providers.dart';
 import 'package:enjanet_pocket/datas/searchtable.dart';
-import 'package:enjanet_pocket/layout/layout.dart';
 import 'package:enjanet_pocket/pages/home/detail/common.dart';
 import 'package:enjanet_pocket/pages/home/detail/disabilityService.dart';
 import 'package:enjanet_pocket/pages/home/detail/helperStationPage.dart';

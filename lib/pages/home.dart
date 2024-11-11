@@ -41,7 +41,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with HomeTutorial {
       throw Exception("UserDb is null");
     }
 
-    createTutorial(userDb!);
+    createTutorial(userDb);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       showHomeBottomSheetWidget(context, false);

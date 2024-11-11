@@ -32,7 +32,7 @@ void main(List<String> args) async {
     open.overrideFor(OperatingSystem.android, openCipherOnAndroid);
   }
   // アプリケーションの状態変更を監視するオブザーバーを追加
-  WidgetsBinding.instance.addObserver(_AppLifecycleObserver());
+  // WidgetsBinding.instance.addObserver(_AppLifecycleObserver());
 
 /*TDO: DBのエラーがあってもそのままHOMEへ行き、プロバイダーを使って、
 画面上部にエラーの帯を表示し、設定からバックアップの復元や、再更新で乗り切れるようにする 
