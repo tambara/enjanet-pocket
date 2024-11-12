@@ -21,6 +21,7 @@ Future<DetailData?> buildHelperStation(
   if (data == null) return null;
 
   return DetailData(
+      eyecatch: data.eyecatch,
       latlang: data.latitudeLongitude != null
           ? parseLatLang(data.latitudeLongitude!)
           : null,

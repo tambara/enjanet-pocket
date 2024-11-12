@@ -1,8 +1,6 @@
-// Dart imports:
-import 'dart:typed_data';
-
 // Package imports:
 import 'package:enjanet_pocket/datas/searchtable.dart';
+import 'package:flutter/foundation.dart';
 
 import 'package:sqlite3/sqlite3.dart';
 
@@ -263,7 +261,7 @@ class ChildService {
         'office_map_image': String? officeMapImage,
         'brochure': String? brochure,
         'page_url': String? pageUrl,
-        // 'eyecatch': Uint8List? eyecatch,
+        'eyecatch': Uint8List? eyecatch,
       } =>
         ChildService(
           itemId: itemId,
@@ -292,7 +290,7 @@ class ChildService {
           officeMapImage: officeMapImage,
           brochure: brochure,
           pageUrl: pageUrl,
-          // eyecatch: eyecatch,
+          eyecatch: eyecatch,
         ),
       _ => throw const FormatException('Failed to load ChildService.'),
     };
@@ -690,7 +688,7 @@ class DisabilityService {
         'office_map_image': String? officeMapImage,
         'brochure': String? brochure,
         'page_url': String? pageUrl,
-        // 'eyecatch': Uint8List? eyecatch,
+        'eyecatch': Uint8List? eyecatch,
       } =>
         DisabilityService(
           itemId: itemId,
@@ -722,7 +720,7 @@ class DisabilityService {
           officeMapImage: officeMapImage,
           brochure: brochure,
           pageUrl: pageUrl,
-          // eyecatch: eyecatch,
+          eyecatch: eyecatch,
         ),
       _ => throw const FormatException('Failed to load DisabilityService.'),
     };
@@ -756,13 +754,13 @@ class EnjanetDatabase {
     final unionAll = criteria.tables.map((v) {
       final tableId = v.value;
       final tableName = v.toTableName!;
-      return "SELECT id,item_id,service_category, office_name, office_name_furigana, address, latitude_longitude, $tableId AS table_type FROM $tableName\n";
+      return "SELECT id,item_id,service_category, office_name, office_name_furigana, address, latitude_longitude, eyecatch, $tableId AS table_type FROM $tableName\n";
     }).join(' UNION ALL ');
 
     if (unionAll.isEmpty) return [];
 
     var query = '''
-      SELECT id,item_id, service_category, office_name, office_name_furigana, address, latitude_longitude, table_type
+      SELECT id,item_id, service_category, office_name, office_name_furigana, address, latitude_longitude, table_type, eyecatch
       FROM ($unionAll) AS combined_tables
       WHERE office_name LIKE ?
     ''';
@@ -795,7 +793,7 @@ class EnjanetDatabase {
 
   DisabilityService? getFirstDisabilityServiceByItemId(int itemId) {
     final columnString =
-        filteredAllColmunName(TABLENAME_DISABILITY_SERVICES, ["eyecatch"]);
+        filteredAllColmunName(TABLENAME_DISABILITY_SERVICES, []);
 
     final stmt = db.prepare(
         'SELECT $columnString FROM $TABLENAME_DISABILITY_SERVICES WHERE item_id = ? LIMIT 1');
@@ -803,12 +801,12 @@ class EnjanetDatabase {
     if (r.isEmpty) {
       return null;
     }
+
     return DisabilityService.fromJson(r.first);
   }
 
   ChildService? getFirstChildServiceByItemId(int itemId) {
-    final columnString =
-        filteredAllColmunName(TABLENAME_CHILD_SERVICES, ["eyecatch"]);
+    final columnString = filteredAllColmunName(TABLENAME_CHILD_SERVICES, []);
 
     final stmt = db.prepare(
         'SELECT $columnString FROM $TABLENAME_CHILD_SERVICES WHERE item_id = ? LIMIT 1');
@@ -820,8 +818,7 @@ class EnjanetDatabase {
   }
 
   HelperStation? getFirstHelperStationByItemId(int itemId) {
-    final columnString =
-        filteredAllColmunName(TABLENAME_HELPER_STATIONS, ["eyecatch"]);
+    final columnString = filteredAllColmunName(TABLENAME_HELPER_STATIONS, []);
 
     final stmt = db.prepare(
         'SELECT $columnString FROM $TABLENAME_HELPER_STATIONS WHERE item_id = ? LIMIT 1');
@@ -833,8 +830,7 @@ class EnjanetDatabase {
   }
 
   HospitalClinic? getFirstHospitalClinicByItemId(int itemId) {
-    final columnString =
-        filteredAllColmunName(TABLENAME_HOSPITALS_CLINICS, ["eyecatch"]);
+    final columnString = filteredAllColmunName(TABLENAME_HOSPITALS_CLINICS, []);
     final stmt = db.prepare(
         'SELECT $columnString FROM $TABLENAME_HOSPITALS_CLINICS WHERE item_id = ? LIMIT 1');
     final ResultSet r = stmt.select([itemId]);
@@ -847,7 +843,7 @@ class EnjanetDatabase {
   Future<PlanningConsultation?> getFirstPlanningConsultationByItemId(
       int itemId) async {
     final columnString =
-        filteredAllColmunName(TABLENAME_PLANNING_CONSULTATIONS, ["eyecatch"]);
+        filteredAllColmunName(TABLENAME_PLANNING_CONSULTATIONS, []);
     final stmt = db.prepare(
         'SELECT $columnString FROM $TABLENAME_PLANNING_CONSULTATIONS WHERE item_id = ? LIMIT 1');
     final ResultSet r = stmt.select([itemId]);
@@ -891,14 +887,11 @@ class EnjanetDatabase {
 
     query += ";";
 
-    print(query);
-
     final stmt = db.prepare(query);
     final r = stmt.select(["%${term ?? ''}%"]);
     if (r.isEmpty) {
       return [];
     }
-    print("query");
 
     return r.map((row) {
       return SearchResult.fromData(row); // データをマッピングする
@@ -1022,7 +1015,9 @@ class UserDatabase {
     final ResultSet resultSet = db.select(
         "SELECT name FROM sqlite_master WHERE type='table' ORDER BY name;");
 
-    print(resultSet.map((row) => row['name'] as String).toList());
+    if (kDebugMode) {
+      print(resultSet.map((row) => row['name'] as String).toList());
+    }
   }
 
   /*
@@ -1071,7 +1066,6 @@ class UserDatabase {
   }
 
   void addBookmark(int itemId, SearchTableNameEnum tableType) {
-    print(getAllTableCreateStatements());
     db.execute(
       'INSERT OR IGNORE INTO $TABLENAME_BOOKMARKS (item_id, table_type, created_at) VALUES (?, ?, ?)',
       [itemId, tableType.value, DateTime.now().millisecondsSinceEpoch],
@@ -1111,7 +1105,9 @@ class UserDatabase {
 
       return tableStatements;
     } catch (e) {
-      print('エラー: $e');
+      if (kDebugMode) {
+        print('エラー: $e');
+      }
       return {};
     }
   }

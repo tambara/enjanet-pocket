@@ -42,12 +42,14 @@ class DetailData {
   Map<String, dynamic> widgets;
   String pageUrl;
   final LatLng? latlang;
+  final Uint8List? eyecatch;
 
   DetailData(
       {required this.title,
       required this.widgets,
       required this.pageUrl,
-      required this.latlang});
+      required this.latlang,
+      required this.eyecatch});
 }
 
 class _StickyTabBarDelegate extends SliverPersistentHeaderDelegate {
@@ -175,6 +177,226 @@ class DetailPage extends ConsumerWidget {
     );
   }
 
+  Widget buildBody(BuildContext context, WidgetRef ref, DetailData items) {
+    var entries = items.widgets.entries.toList();
+
+    return CustomScrollView(slivers: [
+      SliverAppBar(
+        pinned: true,
+        title: Row(
+          children: [
+            // getCycleAvatarFromTableType(type, 18),
+            // const SizedBox(
+            //   width: 10,
+            // ),
+            Expanded(
+              child: Text(items.title,
+                  style: const TextStyle(fontWeight: FontWeight.bold)),
+            ),
+
+            Consumer(
+              builder: (BuildContext context, WidgetRef ref, Widget? child) {
+                final bookmark =
+                    ref.watch(bookmarkProvider((itemId: itemId, table: type)));
+
+                return bookmark != null
+                    ? IconButton(
+                        // iconSize: 24 * 0.9,
+                        visualDensity: const VisualDensity(),
+                        onPressed: () {
+                          final bookmarkNotifier = ref.read(
+                              bookmarkProvider((itemId: itemId, table: type))
+                                  .notifier);
+                          bookmarkNotifier.toggleBookmark();
+                        },
+                        icon: Icon(
+                          bookmark
+                              ? FontAwesomeIcons.solidBookmark
+                              : FontAwesomeIcons.bookmark,
+                          color: Colors.blue,
+                        ))
+                    : const Text("");
+              },
+            ),
+          ],
+        ),
+      ),
+      SliverToBoxAdapter(
+          child: Column(children: [
+        const SizedBox(height: 20),
+        const Text(
+          "事業所情報",
+          textAlign: TextAlign.center,
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+        ),
+        const SizedBox(height: 20),
+        if (items.eyecatch != null)
+          Container(
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(
+                color: Colors.white, // 枠の色
+                width: 2.0, // 枠の太さ
+              ),
+            ),
+            child: CircleAvatar(
+              radius: 50,
+              backgroundImage: MemoryImage(items.eyecatch!),
+            ),
+          ),
+        const SizedBox(height: 20),
+      ])),
+      SliverList(
+        delegate: SliverChildBuilderDelegate(
+          (BuildContext context, int index) {
+            final e = entries[index];
+            return buildLine(e.key, e.value);
+          },
+          childCount: entries.length,
+        ),
+      ),
+      SliverToBoxAdapter(
+        child: Column(
+          children: [
+            Divider(
+              height: 1,
+              indent: 16,
+              endIndent: 16,
+              color: Colors.grey[200],
+            ),
+            const SizedBox(height: 20),
+            const Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: 16,
+              ),
+              child: Text(
+                  "※空白（または-）部分は事業所からの情報を頂いておりません。詳細につきましては直接事業所にお問い合わせください"),
+            ),
+            const SizedBox(height: 20),
+            const Text(
+              "周辺地図",
+              textAlign: TextAlign.center,
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+            ),
+            const SizedBox(height: 20),
+            Container(
+                height: 400,
+                color: Colors.grey[200],
+                child: (items.latlang != null) // 緯度経度が未入力なら 未入力 を表示
+                    ? buildMap(context, ref, items.latlang!)
+                    : const Text("未入力")),
+          ],
+        ),
+      ),
+    ]);
+
+    //   return NestedScrollView(
+    //     headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+    //       return [
+    //         SliverAppBar(
+    //           pinned: true,
+    //           title: Row(
+    //             children: [
+    //               // getCycleAvatarFromTableType(type, 18),
+    //               // const SizedBox(
+    //               //   width: 10,
+    //               // ),
+    //               Expanded(
+    //                 child: Text(items.title,
+    //                     style: const TextStyle(fontWeight: FontWeight.bold)),
+    //               ),
+
+    //               Consumer(
+    //                 builder:
+    //                     (BuildContext context, WidgetRef ref, Widget? child) {
+    //                   final bookmark = ref
+    //                       .watch(bookmarkProvider((itemId: itemId, table: type)));
+
+    //                   return bookmark != null
+    //                       ? IconButton(
+    //                           // iconSize: 24 * 0.9,
+    //                           visualDensity: const VisualDensity(),
+    //                           onPressed: () {
+    //                             final bookmarkNotifier = ref.read(
+    //                                 bookmarkProvider(
+    //                                     (itemId: itemId, table: type)).notifier);
+    //                             bookmarkNotifier.toggleBookmark();
+    //                           },
+    //                           icon: Icon(
+    //                             bookmark
+    //                                 ? FontAwesomeIcons.solidBookmark
+    //                                 : FontAwesomeIcons.bookmark,
+    //                             color: Colors.blue,
+    //                           ))
+    //                       : const Text("");
+    //                 },
+    //               ),
+    //             ],
+    //           ),
+    //         ),
+    //         // buildTab(),
+    //       ];
+    //     },
+    //     // body: TabBarView(children: [
+    //     body: ListView(children: [
+    //       const SizedBox(height: 20),
+    //       const Text(
+    //         "事業所情報",
+    //         textAlign: TextAlign.center,
+    //         style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+    //       ),
+    //       const SizedBox(height: 20),
+    //       // buildDetail(makeDetail(context, ref, itemId, type)),
+    //       ListView.separated(
+    //         shrinkWrap: true,
+    //         physics: ClampingScrollPhysics(),
+    //         itemBuilder: (BuildContext context, int index) {
+    //           final e = entries[index];
+    //           return buildLine(e.key, e.value);
+    //         },
+    //         separatorBuilder: (BuildContext context, int index) {
+    //           return Divider(
+    //             height: 1,
+    //             indent: 16,
+    //             endIndent: 16,
+    //             color: Colors.grey[200],
+    //           );
+    //         },
+    //         itemCount: entries.length,
+    //       ),
+    //       Divider(
+    //         height: 1,
+    //         indent: 16,
+    //         endIndent: 16,
+    //         color: Colors.grey[200],
+    //       ),
+    //       const SizedBox(height: 20),
+    //       const Padding(
+    //         padding: EdgeInsets.symmetric(
+    //           horizontal: 16,
+    //         ),
+    //         child:
+    //             Text("※空白（または-）部分は事業所からの情報を頂いておりません。詳細につきましては直接事業所にお問い合わせください"),
+    //       ),
+    //       const SizedBox(height: 20),
+
+    //       const Text(
+    //         "周辺地図",
+    //         textAlign: TextAlign.center,
+    //         style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+    //       ),
+
+    //       const SizedBox(height: 20),
+    //       Container(
+    //           height: 400,
+    //           color: Colors.grey[200],
+    //           child: (items.latlang != null) // 緯度経度が未入力なら 未入力 を表示
+    //               ? buildMap(context, ref, items.latlang!)
+    //               : const Text("未入力")),
+    //     ]),
+    //   );
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // final bookmarkStream = userDb?.watchBookmark(itemId, type);
@@ -184,7 +406,6 @@ class DetailPage extends ConsumerWidget {
       builder: (BuildContext context, AsyncSnapshot<DetailData?> snapshot) {
         if (snapshot.hasData) {
           var items = snapshot.data!;
-          var entries = items.widgets.entries.toList();
 
           return Scaffold(
               bottomNavigationBar: BottomAppBar(
@@ -197,7 +418,7 @@ class DetailPage extends ConsumerWidget {
                   // mainAxisSize: MainAxisSize.min,
                   children: [
                     TextButton.icon(
-                        label: Text("印刷する"),
+                        label: const Text("印刷する"),
                         onPressed: () async {
                           Uint8List? mapImage;
                           if (items.latlang != null) {
@@ -220,7 +441,7 @@ class DetailPage extends ConsumerWidget {
                           color: Colors.blue,
                         )),
                     TextButton.icon(
-                        label: Text("え〜んじゃネットへ"),
+                        label: const Text("え〜んじゃネットへ"),
                         onPressed: () async {
                           if (await showOkCancel(
                                   context, "え〜んじゃネットにアクセスしますか？") ==
@@ -239,119 +460,7 @@ class DetailPage extends ConsumerWidget {
                   ],
                 ),
               ),
-              body: DefaultTabController(
-                  length: 2,
-                  child: NestedScrollView(
-                    headerSliverBuilder:
-                        (BuildContext context, bool innerBoxIsScrolled) {
-                      return [
-                        SliverAppBar(
-                          pinned: true,
-                          title: Row(
-                            children: [
-                              // getCycleAvatarFromTableType(type, 18),
-                              // const SizedBox(
-                              //   width: 10,
-                              // ),
-                              Expanded(
-                                child: Text(items.title,
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.bold)),
-                              ),
-
-                              Consumer(
-                                builder: (BuildContext context, WidgetRef ref,
-                                    Widget? child) {
-                                  final bookmark = ref.watch(bookmarkProvider(
-                                      (itemId: itemId, table: type)));
-
-                                  return bookmark != null
-                                      ? IconButton(
-                                          // iconSize: 24 * 0.9,
-                                          visualDensity: const VisualDensity(),
-                                          onPressed: () {
-                                            final bookmarkNotifier = ref.read(
-                                                bookmarkProvider((
-                                              itemId: itemId,
-                                              table: type
-                                            )).notifier);
-                                            bookmarkNotifier.toggleBookmark();
-                                          },
-                                          icon: Icon(
-                                            bookmark
-                                                ? FontAwesomeIcons.solidBookmark
-                                                : FontAwesomeIcons.bookmark,
-                                            color: Colors.blue,
-                                          ))
-                                      : const Text("");
-                                },
-                              ),
-                            ],
-                          ),
-                        ),
-                        // buildTab(),
-                      ];
-                    },
-                    // body: TabBarView(children: [
-                    body: ListView(children: [
-                      const SizedBox(height: 20),
-                      const Text(
-                        "事業所情報",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 20),
-                      ),
-                      const SizedBox(height: 20),
-                      // buildDetail(makeDetail(context, ref, itemId, type)),
-                      ListView.separated(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemBuilder: (BuildContext context, int index) {
-                          final e = entries[index];
-                          return buildLine(e.key, e.value);
-                        },
-                        separatorBuilder: (BuildContext context, int index) {
-                          return Divider(
-                            height: 1,
-                            indent: 16,
-                            endIndent: 16,
-                            color: Colors.grey[200],
-                          );
-                        },
-                        itemCount: entries.length,
-                      ),
-                      Divider(
-                        height: 1,
-                        indent: 16,
-                        endIndent: 16,
-                        color: Colors.grey[200],
-                      ),
-                      const SizedBox(height: 20),
-                      const Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 16,
-                        ),
-                        child: Text(
-                            "※空白（または-）部分は事業所からの情報を頂いておりません。詳細につきましては直接事業所にお問い合わせください"),
-                      ),
-                      const SizedBox(height: 20),
-
-                      const Text(
-                        "周辺地図",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 20),
-                      ),
-
-                      const SizedBox(height: 20),
-                      Container(
-                          height: 400,
-                          color: Colors.grey[200],
-                          child: (items.latlang != null) // 緯度経度が未入力なら 未入力 を表示
-                              ? buildMap(context, ref, items.latlang!)
-                              : const Text("未入力")),
-                    ]),
-                  )));
+              body: buildBody(context, ref, items));
           //  buildDetail(appDb),
         } else if (snapshot.hasError) {
           return buildError(

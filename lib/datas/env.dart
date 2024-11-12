@@ -5,8 +5,6 @@ part 'env.g.dart';
 
 @Envied(path: '.env', useConstantCase: true)
 abstract class Env {
-  @EnviedField(varName: 'ENJANET_DB_URL')
-  static const String enjanetDbUrl = _Env.enjanetDbUrl;
   @EnviedField(varName: 'ENJANET_DB_JSON_URL')
   static const String enjanetDbJsonUrl = _Env.enjanetDbJsonUrl;
 
@@ -51,6 +49,9 @@ abstract class Env {
 
   @EnviedField(varName: 'ENJANET_VECTOR_JSON_NAME')
   static const String enjanetVectorJsonName = _Env.enjanetVectorJsonName;
+
+  @EnviedField(varName: 'ENJANET_DB_URL')
+  static const String enjanetDbUrl = _Env.enjanetDbUrl;
 
   @EnviedField(varName: 'INCOMPLETE_DOWNLOAD_EXT')
   static const String incompleteDwnloadExt = _Env.incompleteDwnloadExt;

@@ -25,6 +25,7 @@ Future<DetailData?> buildDisabilityService(
   //     : getCycleAvatarFromTableType(result.service.tableType, 30),
 
   return DetailData(
+      eyecatch: data.eyecatch,
       latlang: data.latitudeLongitude != null
           ? parseLatLang(data.latitudeLongitude!)
           : null,

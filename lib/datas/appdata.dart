@@ -4,6 +4,7 @@ import 'dart:io';
 
 // Flutter imports:
 import 'package:enjanet_pocket/providers/userdb.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -34,9 +35,6 @@ class AppData {
   late String _appTempDir;
 
   Future<bool> init(WidgetRef ref) async {
-    print("init");
-    // TODO: Flyweight
-
     // パッケージ情報（保存ディレクトリ等で使用）
     packageInfo = await PackageInfo.fromPlatform();
 
@@ -50,7 +48,9 @@ class AppData {
     // if (existsUserDb()) {
     final db = ref.read(userDbProvider.notifier);
     if (!db.load()) {
-      print("UserDb load failed");
+      if (kDebugMode) {
+        print("UserDb load failed");
+      }
       // TODO:
     }
     // }

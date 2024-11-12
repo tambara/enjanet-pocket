@@ -17,7 +17,6 @@ class SearchResultsWidget extends ConsumerStatefulWidget {
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() {
-    // TODO: implement createState
     return _SearchResultsWidgetState();
   }
 }
@@ -47,13 +46,25 @@ class _SearchResultsWidgetState extends ConsumerState<SearchResultsWidget> {
             final bookmark = ref.watch(bookmarkProvider(
                 (itemId: result.itemId, table: result.tableType)));
 
-            // final bookmarkStream =
-            //     userDb?.watchBookmark(result.itemId, result.tableType);
             return ListTile(
               // カテゴリ
-              leading: getCycleAvatarFromTableType(result.tableType, 30),
+              // leading: getCycleAvatarFromTableType(result.tableType, 30),
+              leading: result.eyecatch != null
+                  ? Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: Colors.white, // 枠の色
+                          width: 2.0, // 枠の太さ
+                        ),
+                      ),
+                      child: CircleAvatar(
+                        radius: 50,
+                        backgroundImage: MemoryImage(result.eyecatch!),
+                      ))
+                  : getCycleAvatarFromTableType(result.tableType, 30),
               // 事業所名
-              title: Text(result.office_name),
+              title: Text(result.officeName),
               // サービス分類
               subtitle: Text(
                 convertServiceCategoryStr(result.serviceCategory),
@@ -94,9 +105,9 @@ class _SearchResultsWidgetState extends ConsumerState<SearchResultsWidget> {
       case AsyncLoading():
         return const Center(
           child: SizedBox(
-            child: CircularProgressIndicator(),
             height: 45.0,
             width: 45.0,
+            child: CircularProgressIndicator(),
           ),
         );
       case AsyncError(:final error):

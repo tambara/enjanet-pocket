@@ -131,8 +131,8 @@ class MapWidgetState extends ConsumerState<MapWidget>
 
   List<fm.Marker> buildMarker(
       BuildContext context, List<SearchResult> facilities) {
-    return facilities.where((e) => e.latitude_longitude.isNotEmpty).map((e) {
-      final latlong = parseLatLang(e.latitude_longitude);
+    return facilities.where((e) => e.latitudeLongitude.isNotEmpty).map((e) {
+      final latlong = parseLatLang(e.latitudeLongitude);
       //TODO: latlongのnullチェック
 
       return fm.Marker(
@@ -145,7 +145,21 @@ class MapWidgetState extends ConsumerState<MapWidget>
             onTap: () {
               widget.onPress(e);
             },
-            child: getCycleAvatarFromTableType(e.tableType, 30),
+            child: e.eyecatch != null
+                ? Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: Colors.white, // 枠の色
+                        width: 2.0, // 枠の太さ
+                      ),
+                    ),
+                    child: CircleAvatar(
+                      radius: 50,
+                      backgroundImage: MemoryImage(e.eyecatch!),
+                    ),
+                  )
+                : getCycleAvatarFromTableType(e.tableType, 30),
           ));
     }).toList();
   }

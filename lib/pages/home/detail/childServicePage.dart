@@ -13,6 +13,8 @@ import 'package:enjanet_pocket/pages/home/detail.dart';
 import 'package:enjanet_pocket/pages/home/detail/common.dart';
 import 'package:enjanet_pocket/pages/home/detail/pdf.dart';
 
+// TODO: PDFにアイキャッチ画像を追加
+
 Future<DetailData?> buildMapChildService(
     BuildContext context, WidgetRef ref, int itemId) async {
   // TODO: implement buildMap
@@ -22,6 +24,7 @@ Future<DetailData?> buildMapChildService(
   if (data == null) return null;
 
   return DetailData(
+      eyecatch: data.eyecatch,
       title: data.officeName ?? "-",
       pageUrl: data.pageUrl ?? "",
       latlang: data.latitudeLongitude != null
@@ -30,7 +33,6 @@ Future<DetailData?> buildMapChildService(
       widgets: <String, Widget>{
         // 'ID': buildText(data.itemId.toString()),
         // '更新日': buildText(data.lastUpdate?.toString() ?? ''),
-        'サービス分類': buildText(convertServiceCategoryStr(data.serviceCategory)),
         '対象者': buildText(data.targetPerson),
         '児童待機状況': buildText(data.waitStatus),
         '事業所名': buildText(data.officeName),
