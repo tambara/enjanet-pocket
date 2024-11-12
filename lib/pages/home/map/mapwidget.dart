@@ -2,7 +2,6 @@
 import 'dart:ui';
 
 // Flutter imports:
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -14,9 +13,6 @@ import 'package:flutter_map_supercluster/flutter_map_supercluster.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:vector_map_tiles/vector_map_tiles.dart' as vmp;
-import 'package:vector_map_tiles_pmtiles/vector_map_tiles_pmtiles.dart' as pmt;
-import 'package:vector_tile_renderer/vector_tile_renderer.dart';
 
 // Project imports:
 import 'package:enjanet_pocket/datas/appdata.dart';
@@ -25,7 +21,6 @@ import 'package:enjanet_pocket/functions.dart';
 import 'package:enjanet_pocket/layout/layout.dart';
 import 'package:enjanet_pocket/pages/home/map.dart';
 import 'package:enjanet_pocket/pages/home/map/attr.dart';
-import 'package:enjanet_pocket/pages/home/map/style.dart';
 
 // import 'package:flutter_map_animations/flutter_map_animations.dart';
 
@@ -274,43 +269,27 @@ mixin HybridMap<T extends StatefulWidget> on State<T> {
               }
               return const Text("");
             });
-      case MapMode.vector:
-        return FutureBuilder<pmt.PmTilesVectorTileProvider>(
-            future: pmt.PmTilesVectorTileProvider.fromSource(
-                AppData().vectorPmtilesFile.path),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                final tileProvider = snapshot.data!;
+      //   case MapMode.vector:
+      //     return FutureBuilder<pmt.PmTilesVectorTileProvider>(
+      //         future: pmt.PmTilesVectorTileProvider.fromSource(
+      //             AppData().vectorPmtilesFile.path),
+      //         builder: (context, snapshot) {
+      //           if (snapshot.hasData) {
+      //             final tileProvider = snapshot.data!;
 
-                return vmp.VectorTileLayer(
-                  fileCacheTtl: Duration.zero,
-                  theme: ThemeReader().read(osmBrightJaStyle()),
-                  tileProviders: vmp.TileProviders({
-                    'openmaptiles': vmp.MemoryCacheVectorTileProvider(
-                        delegate: tileProvider, maxSizeBytes: 1024 * 1024 * 2),
-                  }),
-                );
-              }
-              return const Text("");
-            });
+      //             return vmp.VectorTileLayer(
+      //               fileCacheTtl: Duration.zero,
+      //               theme: ThemeReader().read(osmBrightJaStyle()),
+      //               tileProviders: vmp.TileProviders({
+      //                 'openmaptiles': vmp.MemoryCacheVectorTileProvider(
+      //                     delegate: tileProvider, maxSizeBytes: 1024 * 1024 * 2),
+      //               }),
+      //             );
+      //           }
+      //           return const Text("");
+      //         });
+      default:
+        return const Text("");
     }
   }
-}
-
-Uint8List generateSolidColorImage(int width, int height, Color color) {
-  final int bytesPerPixel = 4; // RGBA
-  final int stride = width * bytesPerPixel;
-  final Uint8List pixels = Uint8List(width * height * bytesPerPixel);
-
-  for (int y = 0; y < height; y++) {
-    for (int x = 0; x < width; x++) {
-      final int index = y * stride + x * bytesPerPixel;
-      pixels[index] = color.red;
-      pixels[index + 1] = color.green;
-      pixels[index + 2] = color.blue;
-      pixels[index + 3] = color.alpha;
-    }
-  }
-
-  return pixels;
 }
