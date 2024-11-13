@@ -5,6 +5,7 @@ import 'dart:ui';
 // Flutter imports:
 import 'package:enjanet_pocket/providers/userdb.dart';
 import 'package:enjanet_pocket/widgets/dialogs.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -12,6 +13,7 @@ import 'package:flutter/services.dart';
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go_router/go_router.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:path/path.dart' as p;
 import 'package:pdf/pdf.dart';
@@ -129,54 +131,6 @@ class DetailPage extends ConsumerWidget {
     );
   }
 
-  Future<void> _printAdvancedDocument(
-    String title,
-    BuildContext context,
-    WidgetRef ref,
-    int itemId,
-    SearchTableNameEnum type,
-    Uint8List? byteData,
-  ) async {
-    Map<String, pw.Widget>? data;
-
-    if (type == SearchTableNameEnum.hospitalsClinics) {
-      data = await buildHospitalClinicPdf(context, ref, itemId);
-    }
-    // if (type == SearchTable.groupHomes.value) {
-    //   return ChildServicePage(itemId: id);
-    // }
-    if (type == SearchTableNameEnum.childServices) {
-      data = await buildChildServicePdf(context, ref, itemId);
-    }
-    if (type == SearchTableNameEnum.planningConsultations) {
-      data = await buildPlanningConsultationPdf(context, ref, itemId);
-    }
-    if (type == SearchTableNameEnum.helperStations) {
-      data = await buildHelperStationPdf(context, ref, itemId);
-    }
-    if (type == SearchTableNameEnum.disabilityServices) {
-      data = await buildDisabilityServicePdf(context, ref, itemId);
-    }
-
-    if (data == null) {
-      throw Exception("データがありません");
-    }
-
-    // 地図
-    pw.MemoryImage? mapImage;
-    if (byteData != null) {
-      mapImage = pw.MemoryImage(
-        byteData.buffer.asUint8List(),
-      );
-    }
-
-    await Printing.layoutPdf(
-      onLayout: (PdfPageFormat format) {
-        return buildPdf(title, format, data!, mapImage);
-      },
-    );
-  }
-
   Widget buildBody(BuildContext context, WidgetRef ref, DetailData items) {
     var entries = items.widgets.entries.toList();
 
@@ -185,15 +139,10 @@ class DetailPage extends ConsumerWidget {
         pinned: true,
         title: Row(
           children: [
-            // getCycleAvatarFromTableType(type, 18),
-            // const SizedBox(
-            //   width: 10,
-            // ),
             Expanded(
               child: Text(items.title,
                   style: const TextStyle(fontWeight: FontWeight.bold)),
             ),
-
             Consumer(
               builder: (BuildContext context, WidgetRef ref, Widget? child) {
                 final bookmark =
@@ -240,7 +189,7 @@ class DetailPage extends ConsumerWidget {
               ),
             ),
             child: CircleAvatar(
-              radius: 50,
+              radius: 32,
               backgroundImage: MemoryImage(items.eyecatch!),
             ),
           ),
@@ -418,23 +367,20 @@ class DetailPage extends ConsumerWidget {
                   // mainAxisSize: MainAxisSize.min,
                   children: [
                     TextButton.icon(
-                        label: const Text("印刷する"),
+                        label: const Text("印刷"),
                         onPressed: () async {
-                          Uint8List? mapImage;
-                          if (items.latlang != null) {
-                            final r =
-                                await showDialog<MapConfirmationDialogResult?>(
-                              context: context,
-                              builder: (context) =>
-                                  MapConfirmationDialog(latlng: items.latlang!),
-                            );
-                            if (r == null) {
-                              return;
-                            }
-                            mapImage = r.image;
-                          }
-                          await _printAdvancedDocument(items.title, context,
-                              ref, itemId, type, mapImage);
+                          // final r =
+                          //     await showDialog<MapConfirmationDialogResult?>(
+                          //   context: context,
+                          //   builder: (context) => Dialog.fullscreen(
+                          //       child: MapConfirmationDialog(
+                          //           latlng: items.latlang)),
+                          // );
+                          // if (r == null) {
+                          //   return;
+                          // }
+                          await context
+                              .push("/home/print/${type.value}/$itemId");
                         },
                         icon: const FaIcon(
                           FontAwesomeIcons.print,
@@ -531,9 +477,9 @@ Future<Uint8List> buildPdf(String title, PdfPageFormat format,
         base: font1,
         bold: font2,
       ),
-      pageFormat: format.copyWith(marginBottom: 1.5 * PdfPageFormat.cm),
-      orientation: pw.PageOrientation.portrait,
-      crossAxisAlignment: pw.CrossAxisAlignment.start,
+      pageFormat: format,
+      // orientation: pw.PageOrientation.portrait,
+      // crossAxisAlignment: pw.CrossAxisAlignment.start,
       header: (pw.Context context) {
         if (context.pageNumber == 1) {
           return pw.SizedBox();
@@ -541,15 +487,15 @@ Future<Uint8List> buildPdf(String title, PdfPageFormat format,
 
         return pw.Container(
             alignment: pw.Alignment.centerRight,
-            margin: const pw.EdgeInsets.only(bottom: 3.0 * PdfPageFormat.mm),
-            padding: const pw.EdgeInsets.only(bottom: 3.0 * PdfPageFormat.mm),
-            decoration: const pw.BoxDecoration(
-                border: pw.Border(
-                    bottom: pw.BorderSide(width: 0.5, color: PdfColors.grey))),
+            // margin: const pw.EdgeInsets.only(bottom: 3.0 * PdfPageFormat.mm),
+            // padding: const pw.EdgeInsets.only(bottom: 3.0 * PdfPageFormat.mm),
+            // decoration: const pw.BoxDecoration(
+            //     border: pw.Border(
+            //         bottom: pw.BorderSide(width: 0.5, color: PdfColors.grey))),
             child: pw.Text(title,
                 style: pw.Theme.of(context)
                     .defaultTextStyle
-                    .copyWith(color: PdfColors.grey)));
+                    .copyWith(fontSize: 8, color: PdfColors.grey)));
       },
       footer: (pw.Context context) {
         return pw.Container(
@@ -558,37 +504,63 @@ Future<Uint8List> buildPdf(String title, PdfPageFormat format,
             child: pw.Text('${context.pageNumber} / ${context.pagesCount}',
                 style: pw.Theme.of(context)
                     .defaultTextStyle
-                    .copyWith(color: PdfColors.grey)));
+                    .copyWith(fontSize: 8, color: PdfColors.grey)));
       },
-      build: (pw.Context context) => <pw.Widget>[
-            pw.Header(
-                level: 0,
-                title: title,
-                child: pw.Row(
-                    mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                    children: <pw.Widget>[
-                      pw.Text(title, textScaleFactor: 2),
-                    ])),
-            pw.ListView.separated(
-              itemCount: entries.length,
-              itemBuilder: (pw.Context context, int index) {
-                var e = entries[index];
-                return buildLinePdf(e.key, e.value);
-              },
-              separatorBuilder: (pw.Context context, int index) {
-                return pw.Divider(
-                  height: 1,
-                  indent: 16,
-                  endIndent: 16,
-                  color: PdfColors.grey,
-                );
-              },
-            ),
-            pw.Padding(padding: const pw.EdgeInsets.all(10)),
-            pw.Paragraph(
-                text: '※空白（または-）部分は事業所からの情報を頂いておりません。詳細につきましては直接事業所にお問い合わせください')
-          ]));
+      build: (pw.Context context) {
+        var items = <pw.Widget>[
+          pw.Header(
+              level: 0,
+              title: title,
+              decoration: const pw.BoxDecoration(
+                border: pw.Border(
+                  bottom: pw.BorderSide(
+                    color: PdfColors.grey100, // 下線の色を変更
+                    width: 1.0, // 下線の太さを指定
+                  ),
+                ),
+              ),
+              child: pw.Row(
+                  mainAxisAlignment: pw.MainAxisAlignment.start,
+                  children: <pw.Widget>[
+                    pw.Text(title, textScaleFactor: 2),
+                  ])),
+          pw.ListView.separated(
+            itemCount: entries.length,
+            itemBuilder: (pw.Context context, int index) {
+              var e = entries[index];
+              return buildLinePdf(e.key, e.value);
+            },
+            separatorBuilder: (pw.Context context, int index) {
+              return pw.Divider(
+                height: 1,
+                color: PdfColors.grey100,
+              );
+            },
+          ),
+          pw.SizedBox(
+            height: 8,
+          ),
+          pw.Paragraph(
+              style: pdfTextStyle,
+              text: '※空白（または-）部分は事業所からの情報を頂いておりません。詳細につきましては直接事業所にお問い合わせください')
+        ];
+        // if (mapImage != null) {
+        //   items.addAll(<pw.Widget>[
+        //     pw.Text('周辺地図',
+        //         style: pw.Theme.of(context).header0,
+        //         textAlign: pw.TextAlign.center),
+        //     pw.SizedBox(height: 20),
+        //     pw.Center(
+        //       child: pw.Container(
+        //         color: PdfColors.grey,
+        //         child: pw.Image(mapImage),
+        //       ),
+        //     ),
+        //   ]);
+        // }
 
+        return items;
+      }));
   if (mapImage != null) {
     doc.addPage(
       pw.Page(
@@ -596,53 +568,61 @@ Future<Uint8List> buildPdf(String title, PdfPageFormat format,
           base: font1,
           bold: font2,
         ),
-        pageFormat: format.copyWith(marginBottom: 1.5 * PdfPageFormat.cm),
-        orientation: pw.PageOrientation.portrait,
+        pageFormat: format,
+        // orientation: pw.PageOrientation.portrait,
         build: (context) {
           return pw.Column(
+            crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
-              pw.Center(
-                child: pw.Text('周辺地図', style: pw.Theme.of(context).header0),
-              ),
+              pw.Text('周辺地図', style: pw.Theme.of(context).header0),
               pw.SizedBox(height: 20),
-              pw.Spacer(),
               pw.Center(
                 child: pw.Container(
                   color: PdfColors.grey,
                   child: pw.Image(mapImage),
                 ),
               ),
-              pw.Spacer(),
             ],
           );
         },
       ),
     );
   }
+
   return await doc.save();
+}
+
+enum PrintMode {
+  none,
+  print,
+  preview,
 }
 
 class MapConfirmationDialogResult {
   Uint8List? image;
   bool printMap;
+  PrintMode printMode;
 
-  MapConfirmationDialogResult(this.image, this.printMap);
+  MapConfirmationDialogResult(this.image, this.printMap, this.printMode);
 }
 
-class MapConfirmationDialog extends ConsumerStatefulWidget {
-  final LatLng latlng;
+class PrintPage extends ConsumerStatefulWidget {
+  final int itemId;
+  final SearchTableNameEnum type;
 
-  const MapConfirmationDialog({
-    super.key,
-    required this.latlng,
-  });
+  PrintPage({super.key, required this.itemId, required this.type});
 
   @override
-  ConsumerState<MapConfirmationDialog> createState() =>
-      _MapConfirmationDialogState();
+  ConsumerState<PrintPage> createState() => _MapConfirmationDialogState();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    // TODO: implement build
+    throw UnimplementedError();
+  }
 }
 
-class _MapConfirmationDialogState extends ConsumerState<MapConfirmationDialog> {
+class _MapConfirmationDialogState extends ConsumerState<PrintPage> {
   bool _excludeMap = false;
   final repaintBoundaryKey = GlobalKey();
 
@@ -656,12 +636,14 @@ class _MapConfirmationDialogState extends ConsumerState<MapConfirmationDialog> {
           await image.toByteData(format: ui.ImageByteFormat.png);
       return byteData?.buffer.asUint8List();
     } catch (e) {
-      print('Error capturing map: $e');
+      if (kDebugMode) {
+        print('Error capturing map: $e');
+      }
       return null;
     }
   }
 
-  Widget buildMap(BuildContext context, WidgetRef ref) {
+  Widget buildMap(BuildContext context, WidgetRef ref, LatLng? latlng) {
     final primaryMap = ref.watch(settingPrimaryMapProvider);
     var mapState = ref.watch(currentMapModeProvider);
     mapState ??= MapMode.values.firstWhere((e) {
@@ -672,83 +654,217 @@ class _MapConfirmationDialogState extends ConsumerState<MapConfirmationDialog> {
       RepaintBoundary(
         key: repaintBoundaryKey,
         child: DetailMap(
-          center: widget.latlng,
+          center: latlng ?? defaltLatLng,
           zoom: 14,
           mode: mapState,
-          latlngs: [widget.latlng],
+          latlngs: [latlng ?? defaltLatLng],
         ),
       ),
       MapModeSelectButton(),
     ]);
   }
 
+/*
+
+ */
+
+  Widget buildBody(DetailData data) {
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Text('印刷する地図の範囲を確認・修正してください。'),
+          const SizedBox(height: 16),
+          Container(
+            width: 500,
+            height: 500,
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey),
+            ),
+            child: FittedBox(
+              child: RepaintBoundary(
+                child: Container(
+                  width: 1000,
+                  height: 1000,
+                  color: Colors.blue,
+                  child: buildMap(context, ref, data.latlang),
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+          Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+            Checkbox(
+              value: _excludeMap,
+              onChanged: (bool? value) {
+                setState(() {
+                  _excludeMap = value ?? false;
+                });
+              },
+            ),
+            const Text('地図を印刷しない'),
+          ]),
+          const SizedBox(height: 16),
+          Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+            ElevatedButton(
+              onPressed: () async {
+                Uint8List? mapData;
+                if (!_excludeMap) {
+                  mapData = await captureMap(context);
+                }
+                await _printAdvancedDocument(data.title, context, ref,
+                    widget.itemId, widget.type, mapData);
+              },
+              child: const Text('印刷する'),
+            ),
+            const SizedBox(width: 8),
+            ElevatedButton(
+              onPressed: () async {
+                Uint8List? mapData;
+                if (!_excludeMap) {
+                  mapData = await captureMap(context);
+                }
+                await _previewAdvancedDocument(data.title, context, ref,
+                    widget.itemId, widget.type, mapData);
+              },
+              child: const Text('印刷プレビュー'),
+            ),
+          ]),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      title: const Text('地図の確認'),
-      content: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text('印刷する地図の範囲を確認・修正してください。'),
-            const SizedBox(height: 16),
-            Row(
-              children: [
-                Checkbox(
-                  value: _excludeMap,
-                  onChanged: (bool? value) {
-                    setState(() {
-                      _excludeMap = value ?? false;
-                    });
-                  },
-                ),
-                const Text('地図を印刷しない'),
-              ],
-            ),
-            const SizedBox(height: 16),
-            Container(
-              width: 500,
-              height: 500,
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey),
-              ),
-              child: FittedBox(
-                child: RepaintBoundary(
-                  child: Container(
-                    width: 1000,
-                    height: 1000,
-                    color: Colors.blue,
-                    child: buildMap(
-                      context,
-                      ref,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
+    return Scaffold(
+        appBar: AppBar(
+          title: const Text('印刷'),
         ),
-      ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(null),
-          child: const Text('キャンセル'),
-        ),
-        ElevatedButton(
-          onPressed: () async {
-            if (!_excludeMap) {
-              final data = await captureMap(context);
-              Navigator.of(context)
-                  .pop(MapConfirmationDialogResult(data, _excludeMap));
-            } else {
-              Navigator.of(context)
-                  .pop(MapConfirmationDialogResult(null, _excludeMap));
-            }
-          },
-          child: const Text('次へ'),
-        ),
-      ],
+        body: FutureBuilder<DetailData?>(
+            future: makeDetail(context, ref, widget.itemId, widget.type),
+            builder:
+                (BuildContext context, AsyncSnapshot<DetailData?> snapshot) {
+              if (snapshot.hasData) {
+                var items = snapshot.data!;
+                return buildBody(items!);
+              } else if (snapshot.hasError) {
+                throw Exception('${snapshot.error!}');
+              } else {
+                return const CircularProgressIndicator();
+              }
+            }));
+  }
+
+  Future<void> _printAdvancedDocument(
+    String title,
+    BuildContext context,
+    WidgetRef ref,
+    int itemId,
+    SearchTableNameEnum type,
+    Uint8List? byteData,
+  ) async {
+    Map<String, pw.Widget>? data;
+
+    if (type == SearchTableNameEnum.hospitalsClinics) {
+      data = await buildHospitalClinicPdf(context, ref, itemId);
+    }
+    // if (type == SearchTable.groupHomes.value) {
+    //   return ChildServicePage(itemId: id);
+    // }
+    if (type == SearchTableNameEnum.childServices) {
+      data = await buildChildServicePdf(context, ref, itemId);
+    }
+    if (type == SearchTableNameEnum.planningConsultations) {
+      data = await buildPlanningConsultationPdf(context, ref, itemId);
+    }
+    if (type == SearchTableNameEnum.helperStations) {
+      data = await buildHelperStationPdf(context, ref, itemId);
+    }
+    if (type == SearchTableNameEnum.disabilityServices) {
+      data = await buildDisabilityServicePdf(context, ref, itemId);
+    }
+
+    if (data == null) {
+      throw Exception("データがありません");
+    }
+
+    // 地図
+    pw.MemoryImage? mapImage;
+    if (byteData != null) {
+      mapImage = pw.MemoryImage(
+        byteData.buffer.asUint8List(),
+      );
+    }
+
+    await Printing.layoutPdf(
+      onLayout: (PdfPageFormat format) {
+        return buildPdf(title, format, data!, mapImage);
+      },
     );
+  }
+
+  Future<void> _previewAdvancedDocument(
+    String title,
+    BuildContext context,
+    WidgetRef ref,
+    int itemId,
+    SearchTableNameEnum type,
+    Uint8List? byteData,
+  ) async {
+    Map<String, pw.Widget>? data;
+
+    if (type == SearchTableNameEnum.hospitalsClinics) {
+      data = await buildHospitalClinicPdf(context, ref, itemId);
+    }
+    // if (type == SearchTable.groupHomes.value) {
+    //   return ChildServicePage(itemId: id);
+    // }
+    if (type == SearchTableNameEnum.childServices) {
+      data = await buildChildServicePdf(context, ref, itemId);
+    }
+    if (type == SearchTableNameEnum.planningConsultations) {
+      data = await buildPlanningConsultationPdf(context, ref, itemId);
+    }
+    if (type == SearchTableNameEnum.helperStations) {
+      data = await buildHelperStationPdf(context, ref, itemId);
+    }
+    if (type == SearchTableNameEnum.disabilityServices) {
+      data = await buildDisabilityServicePdf(context, ref, itemId);
+    }
+
+    if (data == null) {
+      throw Exception("データがありません");
+    }
+
+    // 地図
+    pw.MemoryImage? mapImage;
+    if (byteData != null) {
+      mapImage = pw.MemoryImage(
+        byteData.buffer.asUint8List(),
+      );
+    }
+    final r = await showDialog<bool?>(
+      context: context,
+      builder: (context) => Dialog.fullscreen(
+        child: Scaffold(
+            appBar: AppBar(
+              title: const Text("印刷プレビュー"),
+              leading: IconButton(
+                icon: const Icon(Icons.close),
+                onPressed: () => Navigator.of(context).pop(null),
+              ),
+            ),
+            body: PdfPreview(
+              build: (format) async {
+                return buildPdf(title, format, data!, mapImage);
+              },
+            )),
+      ),
+    );
+
+    if (r == null) {
+      return;
+    }
   }
 }

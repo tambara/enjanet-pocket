@@ -59,10 +59,10 @@ class _SearchResultsWidgetState extends ConsumerState<SearchResultsWidget> {
                         ),
                       ),
                       child: CircleAvatar(
-                        radius: 50,
+                        radius: 32,
                         backgroundImage: MemoryImage(result.eyecatch!),
                       ))
-                  : getCycleAvatarFromTableType(result.tableType, 30),
+                  : getCycleAvatarFromTableType(result.tableType, 32),
               // 事業所名
               title: Text(result.officeName),
               // サービス分類

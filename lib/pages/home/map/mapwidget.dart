@@ -24,6 +24,8 @@ import 'package:enjanet_pocket/pages/home/map/attr.dart';
 
 // import 'package:flutter_map_animations/flutter_map_animations.dart';
 
+const defaltLatLng = LatLng(34.6551, 133.9195);
+
 class MapWidget extends ConsumerStatefulWidget {
   final List<SearchResult> facilities;
   final Function(SearchResult r) onPress;
@@ -102,12 +104,12 @@ class MapWidgetState extends ConsumerState<MapWidget>
           onMarkerTap: (marker) {
             // _superclusterController.remove(marker);
           },
-          clusterWidgetSize: const Size(35, 35),
+          clusterWidgetSize: const Size(32, 32),
           calculateAggregatedClusterData: true,
           builder: (context, position, markerCount, extraClusterData) =>
               Container(
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(30.0),
+              borderRadius: BorderRadius.circular(32.0),
               // border: Border.all(color: Colors.white, width: 3),
               color: Colors.amber.withOpacity(0.8),
             ),
@@ -131,10 +133,10 @@ class MapWidgetState extends ConsumerState<MapWidget>
       //TODO: latlongのnullチェック
 
       return fm.Marker(
-          width: 30.0,
-          height: 30.0,
+          width: 32.0,
+          height: 32.0,
           // ピンの位置を設定
-          point: latlong ?? const LatLng(34.6551, 133.9195),
+          point: latlong ?? defaltLatLng,
           rotate: true,
           child: GestureDetector(
             onTap: () {
@@ -150,11 +152,11 @@ class MapWidgetState extends ConsumerState<MapWidget>
                       ),
                     ),
                     child: CircleAvatar(
-                      radius: 50,
+                      radius: 32,
                       backgroundImage: MemoryImage(e.eyecatch!),
                     ),
                   )
-                : getCycleAvatarFromTableType(e.tableType, 30),
+                : getCycleAvatarFromTableType(e.tableType, 32),
           ));
     }).toList();
   }

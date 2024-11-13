@@ -96,9 +96,9 @@ Future<Map<String, pw.Widget>?> buildDisabilityServicePdf(
     '事業の内容（活動・作業等の内容）': buildTextPdf(data.businessContent),
     '事業所の特徴・コメント・PR': buildTextPdf(data.officeFeatures),
     // '緯度経度': buildTextPdf(data.latitudeLongitude),
-    '事業所の写真': buildTextPdf(data.officePhoto),
-    '事業所の外観画像': buildTextPdf(data.officeExteriorImage),
-    '事業所の略地図画像': buildTextPdf(data.officeMapImage),
+    // '事業所の写真': buildTextPdf(data.officePhoto),
+    // '事業所の外観画像': buildTextPdf(data.officeExteriorImage),
+    // '事業所の略地図画像': buildTextPdf(data.officeMapImage),
     'パンフレット': buildBrochurePdf(data.brochure),
   };
 }

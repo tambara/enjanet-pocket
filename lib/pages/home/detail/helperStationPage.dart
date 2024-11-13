@@ -35,59 +35,62 @@ Future<DetailData?> buildHelperStation(
         '事業所名・ホーム名のふりがな': buildText(data.officeNameFurigana),
         '住所': buildText(data.address),
         '電話番号': buildText(data.phoneNumber ?? ''),
-        '岡山市北区（御津・建部地域を除く）へのサービス提供': buildCircleCrossTriangleWidget(
+        '1. 岡山市北区（御津・建部地域を除く）へのサービス提供': buildCircleCrossTriangleWidget(
             data.serviceInOkayamaNorthExceptMitsuAndTakebe),
-        '岡山市北区（御津・建部地域を除く）へのサービス提供 備考':
+        '1. 岡山市北区（御津・建部地域を除く）へのサービス提供 備考':
             buildText(data.serviceInOkayamaNorthExceptMitsuAndTakebeNotes),
-        '岡山市北区（御津・建部地域）へのサービス提供': buildCircleCrossTriangleWidget(
+        '2. 岡山市北区（御津・建部地域）へのサービス提供': buildCircleCrossTriangleWidget(
             data.serviceInOkayamaNorthInMitsuAndTakebe),
-        '岡山市北区（御津・建部地域）へのサービス提供 備考':
+        '2. 岡山市北区（御津・建部地域）へのサービス提供 備考':
             buildText(data.serviceInOkayamaNorthInMitsuAndTakebeNotes),
-        '岡山市中区へのサービス提供':
+        '3. 岡山市中区へのサービス提供':
             buildCircleCrossTriangleWidget(data.serviceInOkayamaMiddle),
-        'サービス提供地域（中区）備考': buildText(data.serviceInOkayamaMiddleNotes),
-        '岡山市東区へのサービス提供':
+        '3. サービス提供地域（中区）備考': buildText(data.serviceInOkayamaMiddleNotes),
+        '4. 岡山市東区へのサービス提供':
             buildCircleCrossTriangleWidget(data.serviceInOkayamaEast),
-        '岡山市東区へのサービス提供 備考': buildText(data.serviceInOkayamaEastNotes),
-        '岡山市南区へのサービス提供':
+        '4. 岡山市東区へのサービス提供 備考': buildText(data.serviceInOkayamaEastNotes),
+        '5. 岡山市南区へのサービス提供':
             buildCircleCrossTriangleWidget(data.serviceInOkayamaSouth),
-        '岡山市南区へのサービス提供 備考': buildText(data.serviceInOkayamaSouthNotes),
-        '居宅介護（家事援助・身体介護等）サービス提供':
+        '5. 岡山市南区へのサービス提供 備考': buildText(data.serviceInOkayamaSouthNotes),
+        '6. 居宅介護（家事援助・身体介護等）サービス提供':
             buildCircleCrossTriangleWidget(data.homeCareServiceProvision),
-        '居宅介護（家事援助・身体介護等）サービス提供 備考':
+        '6. 居宅介護（家事援助・身体介護等）サービス提供 備考':
             buildText(data.homeCareServiceProvisionNotes),
-        '重度訪問介護サービス提供': buildCircleCrossTriangleWidget(
+        '7. 重度訪問介護サービス提供': buildCircleCrossTriangleWidget(
             data.severeVisitCareServiceProvision),
-        '重度訪問介護サービス提供 備考': buildText(data.severeVisitCareServiceProvisionNotes),
-        '同行援護サービス提供': buildCircleCrossTriangleWidget(
+        '7. 重度訪問介護サービス提供 備考':
+            buildText(data.severeVisitCareServiceProvisionNotes),
+        '8. 同行援護サービス提供': buildCircleCrossTriangleWidget(
             data.accompanimentSupportServiceProvision),
-        '同行援護サービス提供 備考':
+        '8. 同行援護サービス提供 備考':
             buildText(data.accompanimentSupportServiceProvisionNotes),
-        '行動援護サービス提供': buildCircleCrossTriangleWidget(
+        '9. 行動援護サービス提供': buildCircleCrossTriangleWidget(
             data.behaviorSupportServiceProvision),
-        '行動援護サービス提供 備考': buildText(data.behaviorSupportServiceProvisionNotes),
-        '移動支援サービス提供': buildCircleCrossTriangleWidget(
+        '9. 行動援護サービス提供 備考':
+            buildText(data.behaviorSupportServiceProvisionNotes),
+        '10. 移動支援サービス提供': buildCircleCrossTriangleWidget(
             data.movementSupportServiceProvision),
-        '移動支援サービス提供 備考': buildText(data.movementSupportServiceProvisionNotes),
-        '介護保険サービス（訪問介護）提供':
+        '10. 移動支援サービス提供 備考':
+            buildText(data.movementSupportServiceProvisionNotes),
+        '11. 介護保険サービス（訪問介護）提供':
             buildCircleCrossTriangleWidget(data.careInsuranceServiceProvision),
-        '介護保険サービス（訪問介護）提供 備考':
+        '11. 介護保険サービス（訪問介護）提供 備考':
             buildText(data.careInsuranceServiceProvisionNotes),
-        '一部医療ケア（※1）への対応\n ※1 対象となる医療行為：○たんの吸引（口膣内、鼻腔内、気管カニューレ内部）○経管栄養（胃ろうまたは経鼻経）':
+        '12. 一部医療ケア（※1）への対応\n ※1 対象となる医療行為：○たんの吸引（口膣内、鼻腔内、気管カニューレ内部）○経管栄養（胃ろうまたは経鼻経）':
             buildCircleCrossTriangleWidget(data.partialMedicalCareResponse),
-        '一部医療ケアへの対応 備考': buildText(data.partialMedicalCareResponseNotes),
-        '土曜日・日曜日・祝日のサービス提供':
+        '12. 一部医療ケアへの対応 備考': buildText(data.partialMedicalCareResponseNotes),
+        '13. 土曜日・日曜日・祝日のサービス提供':
             buildCircleCrossTriangleWidget(data.weekendHolidaysService),
-        '土曜日・日曜日・祝日のサービス提供 備考': buildText(data.weekendHolidaysServiceNotes),
-        '早朝（6～8時）のサービス提供':
+        '13. 土曜日・日曜日・祝日のサービス提供 備考': buildText(data.weekendHolidaysServiceNotes),
+        '14. 早朝（6～8時）のサービス提供':
             buildCircleCrossTriangleWidget(data.earlyMorningService),
-        '早朝（6～8時）のサービス提供 備考': buildText(data.earlyMorningServiceNotes),
-        '夜間（18時～22時）のサービス提供':
+        '14. 早朝（6～8時）のサービス提供 備考': buildText(data.earlyMorningServiceNotes),
+        '15. 夜間（18時～22時）のサービス提供':
             buildCircleCrossTriangleWidget(data.eveningService),
-        '夜間（18時～22時）のサービス提供 備考': buildText(data.eveningServiceNotes),
-        '深夜（22時～8時）のサービス提供':
+        '15. 夜間（18時～22時）のサービス提供 備考': buildText(data.eveningServiceNotes),
+        '16. 深夜（22時～8時）のサービス提供':
             buildCircleCrossTriangleWidget(data.overnightService),
-        '深夜（22時～8時）のサービス提供 備考': buildText(data.overnightServiceNotes),
+        '16. 深夜（22時～8時）のサービス提供 備考': buildText(data.overnightServiceNotes),
         // '緯度経度': buildText(data.latitudeLongitude),
         'パンフレット': buildBrochure(context, data.brochure, data.pageUrl!),
       });
@@ -108,59 +111,61 @@ Future<Map<String, pw.Widget>?> buildHelperStationPdf(
     '事業所名・ホーム名のふりがな': buildTextPdf(data.officeNameFurigana),
     '住所': buildTextPdf(data.address),
     '電話番号': buildTextPdf(data.phoneNumber ?? ''),
-    '岡山市北区（御津・建部地域を除く）へのサービス提供': buildCircleCrossTriangleWidgetPdf(
+    '1. 岡山市北区（御津・建部地域を除く）へのサービス提供': buildCircleCrossTriangleWidgetPdf(
         data.serviceInOkayamaNorthExceptMitsuAndTakebe),
-    '岡山市北区（御津・建部地域を除く）へのサービス提供 備考':
+    '1. 岡山市北区（御津・建部地域を除く）へのサービス提供 備考':
         buildTextPdf(data.serviceInOkayamaNorthExceptMitsuAndTakebeNotes),
-    '岡山市北区（御津・建部地域）へのサービス提供': buildCircleCrossTriangleWidgetPdf(
+    '2. 岡山市北区（御津・建部地域）へのサービス提供': buildCircleCrossTriangleWidgetPdf(
         data.serviceInOkayamaNorthInMitsuAndTakebe),
-    '岡山市北区（御津・建部地域）へのサービス提供 備考':
+    '2. 岡山市北区（御津・建部地域）へのサービス提供 備考':
         buildTextPdf(data.serviceInOkayamaNorthInMitsuAndTakebeNotes),
-    '岡山市中区へのサービス提供':
+    '3. 岡山市中区へのサービス提供':
         buildCircleCrossTriangleWidgetPdf(data.serviceInOkayamaMiddle),
-    'サービス提供地域（中区）備考': buildTextPdf(data.serviceInOkayamaMiddleNotes),
-    '岡山市東区へのサービス提供':
+    '3. サービス提供地域（中区）備考': buildTextPdf(data.serviceInOkayamaMiddleNotes),
+    '4. 岡山市東区へのサービス提供':
         buildCircleCrossTriangleWidgetPdf(data.serviceInOkayamaEast),
-    '岡山市東区へのサービス提供 備考': buildTextPdf(data.serviceInOkayamaEastNotes),
-    '岡山市南区へのサービス提供':
+    '4. 岡山市東区へのサービス提供 備考': buildTextPdf(data.serviceInOkayamaEastNotes),
+    '5. 岡山市南区へのサービス提供':
         buildCircleCrossTriangleWidgetPdf(data.serviceInOkayamaSouth),
-    '岡山市南区へのサービス提供 備考': buildTextPdf(data.serviceInOkayamaSouthNotes),
-    '居宅介護（家事援助・身体介護等）サービス提供':
+    '5. 岡山市南区へのサービス提供 備考': buildTextPdf(data.serviceInOkayamaSouthNotes),
+    '6. 居宅介護（家事援助・身体介護等）サービス提供':
         buildCircleCrossTriangleWidgetPdf(data.homeCareServiceProvision),
-    '居宅介護（家事援助・身体介護等）サービス提供 備考':
+    '6. 居宅介護（家事援助・身体介護等）サービス提供 備考':
         buildTextPdf(data.homeCareServiceProvisionNotes),
-    '重度訪問介護サービス提供':
+    '7. 重度訪問介護サービス提供':
         buildCircleCrossTriangleWidgetPdf(data.severeVisitCareServiceProvision),
-    '重度訪問介護サービス提供 備考': buildTextPdf(data.severeVisitCareServiceProvisionNotes),
-    '同行援護サービス提供': buildCircleCrossTriangleWidgetPdf(
+    '7. 重度訪問介護サービス提供 備考':
+        buildTextPdf(data.severeVisitCareServiceProvisionNotes),
+    '8. 同行援護サービス提供': buildCircleCrossTriangleWidgetPdf(
         data.accompanimentSupportServiceProvision),
-    '同行援護サービス提供 備考':
+    '8. 同行援護サービス提供 備考':
         buildTextPdf(data.accompanimentSupportServiceProvisionNotes),
-    '行動援護サービス提供':
+    '9. 行動援護サービス提供':
         buildCircleCrossTriangleWidgetPdf(data.behaviorSupportServiceProvision),
-    '行動援護サービス提供 備考': buildTextPdf(data.behaviorSupportServiceProvisionNotes),
-    '移動支援サービス提供':
+    '9. 行動援護サービス提供 備考': buildTextPdf(data.behaviorSupportServiceProvisionNotes),
+    '10. 移動支援サービス提供':
         buildCircleCrossTriangleWidgetPdf(data.movementSupportServiceProvision),
-    '移動支援サービス提供 備考': buildTextPdf(data.movementSupportServiceProvisionNotes),
-    '介護保険サービス（訪問介護）提供':
+    '10. 移動支援サービス提供 備考':
+        buildTextPdf(data.movementSupportServiceProvisionNotes),
+    '11. 介護保険サービス（訪問介護）提供':
         buildCircleCrossTriangleWidgetPdf(data.careInsuranceServiceProvision),
-    '介護保険サービス（訪問介護）提供 備考':
+    '11. 介護保険サービス（訪問介護）提供 備考':
         buildTextPdf(data.careInsuranceServiceProvisionNotes),
-    '一部医療ケアへの対応':
+    '12. 一部医療ケアへの対応':
         buildCircleCrossTriangleWidgetPdf(data.partialMedicalCareResponse),
-    '一部医療ケアへの対応 備考': buildTextPdf(data.partialMedicalCareResponseNotes),
-    '土曜日・日曜日・祝日のサービス提供':
+    '12. 一部医療ケアへの対応 備考': buildTextPdf(data.partialMedicalCareResponseNotes),
+    '13. 土曜日・日曜日・祝日のサービス提供':
         buildCircleCrossTriangleWidgetPdf(data.weekendHolidaysService),
-    '土曜日・日曜日・祝日のサービス提供 備考': buildTextPdf(data.weekendHolidaysServiceNotes),
-    '早朝（6～8時）のサービス提供':
+    '13. 土曜日・日曜日・祝日のサービス提供 備考': buildTextPdf(data.weekendHolidaysServiceNotes),
+    '14. 早朝（6～8時）のサービス提供':
         buildCircleCrossTriangleWidgetPdf(data.earlyMorningService),
-    '早朝（6～8時）のサービス提供 備考': buildTextPdf(data.earlyMorningServiceNotes),
-    '夜間（18時～22時）のサービス提供':
+    '14. 早朝（6～8時）のサービス提供 備考': buildTextPdf(data.earlyMorningServiceNotes),
+    '15. 夜間（18時～22時）のサービス提供':
         buildCircleCrossTriangleWidgetPdf(data.eveningService),
-    '夜間（18時～22時）のサービス提供 備考': buildTextPdf(data.eveningServiceNotes),
-    '深夜（22時～8時）のサービス提供':
+    '15. 夜間（18時～22時）のサービス提供 備考': buildTextPdf(data.eveningServiceNotes),
+    '16. 深夜（22時～8時）のサービス提供':
         buildCircleCrossTriangleWidgetPdf(data.overnightService),
-    '深夜（22時～8時）のサービス提供 備考': buildTextPdf(data.overnightServiceNotes),
+    '16. 深夜（22時～8時）のサービス提供 備考': buildTextPdf(data.overnightServiceNotes),
     // '緯度経度': buildTextPdf(data.latitudeLongitude),
     'パンフレット': buildBrochurePdf(data.brochure),
   };

@@ -7,8 +7,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:vector_map_tiles_pmtiles/vector_map_tiles_pmtiles.dart' as pmt;
-import 'package:vector_tile_renderer/vector_tile_renderer.dart' as vtr;
+// import 'package:vector_map_tiles_pmtiles/vector_map_tiles_pmtiles.dart' as pmt;
+// import 'package:vector_tile_renderer/vector_tile_renderer.dart' as vtr;
 
 // Project imports:
 import 'package:enjanet_pocket/providers/providers.dart';
@@ -47,7 +47,7 @@ class _MapScreenState extends ConsumerState<MapScreen>
     super.initState();
   }
 
-  final vtr.Theme mapTheme = pmt.ProtomapsThemes.light();
+  // final vtr.Theme mapTheme = pmt.ProtomapsThemes.light();
 
   @override
   Widget build(BuildContext context) {

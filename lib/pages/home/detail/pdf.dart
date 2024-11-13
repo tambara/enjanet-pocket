@@ -7,8 +7,12 @@ import 'package:pdf/widgets.dart';
 // Project imports:
 import 'package:enjanet_pocket/datas/env.dart';
 
+const pdfTextStyle = TextStyle(lineSpacing: 5, fontSize: 8);
+
 Widget buildSpecificDisabilityPdf(String? text) {
-  if (text == null) return Text('-');
+  if (text == null || text.trim().isEmpty) {
+    return Text("-", style: pdfTextStyle);
+  }
 
   return Row(
       children: text.split("||").map((e) {
@@ -19,137 +23,106 @@ Widget buildSpecificDisabilityPdf(String? text) {
     switch (e) {
       case "身体":
         color = PdfColorHsl(120.0, saturation, light);
+        break;
       case "知的":
-        color = PdfColorHsl(0.0, saturation, light); // 赤
+        color = PdfColorHsl(0.0, saturation, light);
+        break;
       case "精神":
-        color = PdfColorHsl(240.0, saturation, light); // 赤
+        color = PdfColorHsl(240.0, saturation, light);
+        break;
       case "児童":
-        color = PdfColorHsl(60.0, saturation, light); // 赤
+        color = PdfColorHsl(60.0, saturation, light);
+        break;
       case "難病":
-        color = PdfColorHsl(270.0, saturation, light); // 紫
+        color = PdfColorHsl(270.0, saturation, light);
+        break;
     }
     return Container(
       margin: const EdgeInsets.only(right: 5),
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       decoration: BoxDecoration(
-        // borderRadius: const BorderRadius.all(Radius.circular(32)),
-        // border: Border.all(
-        //   width: 2,
-        //   color: PdfColors.white,
-        // ),
         color: color,
       ),
-      child: Text(e,
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-          )),
+      child: Text(e, style: pdfTextStyle),
     );
   }).toList());
 }
 
 Widget buildBrochurePdf(String? text) {
-  if (text == null) return Text('-');
+  text = text == null || text.trim().isEmpty ? "-" : "${Env.enjanetUrl}/$text";
 
-  var url = text.trim();
-
-  try {
-    if (url.isNotEmpty) {
-      url = p.normalize(Env.enjanetUrl + "/" + url);
-
-      return Text(
-        url,
-        // color: Colors.blue,
-        // icon: FaIcon(
-        //   FontAwesomeIcons.download,
-        // )
-      );
-    }
-  } catch (e) {}
-  return Text("-");
-
-  // return buildLink(p.normalize(Env.enjanetUrl + "/" + text));
+  return Text(
+    text,
+    style: pdfTextStyle,
+  );
 }
 
 Widget buildPresenceAbsencePdf(String? value) {
-  if (value == null || value.trim().isEmpty) return Text('-');
+  if (value == null || value.trim().isEmpty) value = '-';
+
   switch (value) {
-    case "1":
-      return Text(
-        '○',
-        style: const TextStyle(fontSize: 22),
-      );
     case "0":
-      return Text(
-        '×',
-        style: const TextStyle(fontSize: 22),
-      );
-    default:
-      return Text('想定外の値:$value');
+      value = '×';
+      break;
+    case "1":
+      value = '○';
+      break;
   }
+
+  return Text(
+    value,
+    style: pdfTextStyle,
+  );
 }
 
 Widget buildCircleCrossTriangleWidgetPdf(int? num) {
-  if (num == null) {
-    return Text("-");
-  }
-  PdfColor color = PdfColors.black;
   String text = "-";
   switch (num) {
     case 1:
-      color = PdfColors.blue;
       text = "○";
+      break;
     case 2:
-      color = PdfColors.red;
       text = "△";
-
+      break;
     case 3:
-      color = PdfColors.yellow;
       text = "×";
+      break;
+    default:
+      text = "-";
+      break;
   }
+
   return Text(
     text,
-    style: TextStyle(
-      color: color,
-      // fontFeatures: const [FontFeature.tabularFigures()],
-      fontSize: 32,
-      fontWeight: FontWeight.bold,
-    ),
+    style: pdfTextStyle,
   );
 }
 
 Widget buildLinePdf(String title, Widget value) {
-  return Column(
-    children: [
-      Padding(
-          padding: const EdgeInsets.only(left: 16.0, bottom: 16.0, top: 16.0),
-          child: Row(
-            children: [
-              Expanded(
-                  flex: 3,
-                  child: Text(title,
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                      textAlign: TextAlign.center)),
-              SizedBox(
-                width: 10,
-              ),
-              Flexible(flex: 6, child: value),
-            ],
-          )),
-      Divider(
-        height: 1,
-        indent: 16,
-        endIndent: 16,
-        color: PdfColors.grey,
-      )
-    ],
+  return Padding(
+    padding: const EdgeInsets.only(bottom: 6, top: 6, right: 3),
+    child: Row(
+      children: [
+        Expanded(
+            flex: 3,
+            child: Text(
+              title,
+              style: TextStyle(
+                  lineSpacing: 5, fontSize: 8, fontWeight: FontWeight.bold),
+            )),
+        SizedBox(
+          width: 10,
+        ),
+        Flexible(flex: 6, child: value),
+      ],
+    ),
   );
 }
 
 Widget buildTextPdf(String? text) {
-  if (text == null) return Text('-');
-
-  text = text.trim();
-  return Text(text.isNotEmpty ? text : '-');
+  text ??= '-';
+  text = text.replaceAll('\r\n', '\n').replaceAll('\r', '\n').trim();
+  return Text(text, style: pdfTextStyle);
 }
 
 Widget buildLinkPdf(String? url) {
@@ -159,27 +132,28 @@ Widget buildLinkPdf(String? url) {
   try {
     if (url.isNotEmpty) {
       return Text(
-        // linkStyle: const TextStyle(color: PdfColors.blue),
-        // onOpen: (link) async {
-        //   if (!await launchUrl(Uri.parse(link.url))) {
-        //     throw Exception('Could not launch ${link.url}');
-        //   }
-        // },
-        url,
-      );
+          // linkStyle: const TextStyle(color: PdfColors.blue),
+          // onOpen: (link) async {
+          //   if (!await launchUrl(Uri.parse(link.url))) {
+          //     throw Exception('Could not launch ${link.url}');
+          //   }
+          // },
+          url,
+          style: pdfTextStyle);
     }
   } catch (e) {}
-  return Text("-");
+  return Text("-", style: pdfTextStyle);
 }
 
 Widget buildYuMuPdf(String? text) {
-  if (text == null || text.trim().isEmpty) return Text('-');
+  if (text == null || text.trim().isEmpty)
+    return Text('-', style: pdfTextStyle);
   switch (text) {
     case "有":
-      return Text("あり");
+      return Text("あり", style: pdfTextStyle);
 
     case "無":
     default:
-      return Text('-');
+      return Text('-', style: pdfTextStyle);
   }
 }

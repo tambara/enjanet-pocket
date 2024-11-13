@@ -187,7 +187,21 @@ final goRouterProvider = Provider<GoRouter>(
                     return ErrorPage(message: e.toString());
                   }
                 },
+                routes: [],
               ),
+              GoRoute(
+                path: 'print/:type/:id',
+                builder: (BuildContext context, GoRouterState state) {
+                  try {
+                    final type = int.parse(state.pathParameters['type']!);
+                    final id = int.parse(state.pathParameters['id']!);
+                    return PrintPage(
+                        itemId: id, type: SearchTableNameEnum.fromInt(type)!);
+                  } catch (e) {
+                    return ErrorPage(message: e.toString());
+                  }
+                },
+              )
             ]),
       ],
     );
