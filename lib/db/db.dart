@@ -876,11 +876,11 @@ class EnjanetDatabase {
     }).join(',');
 
     final unionAll = SearchTableNameEnum.namesAndValues.entries.map((e) {
-      return "SELECT id,item_id,service_category, office_name, office_name_furigana, address, latitude_longitude, ${e.key} AS table_type FROM ${e.value}";
+      return "SELECT id,item_id,service_category, office_name, office_name_furigana, address, latitude_longitude, eyecatch, ${e.key} AS table_type FROM ${e.value}";
     }).join(' UNION ALL ');
 
     var query = '''
-      SELECT id,item_id, service_category, office_name, office_name_furigana, address, latitude_longitude, table_type
+      SELECT id,item_id, service_category, office_name, office_name_furigana, address, latitude_longitude, table_type, eyecatch
       FROM ($unionAll) AS combined_tables
       WHERE office_name LIKE ? AND (item_id, table_type) IN ($ins)
     ''';

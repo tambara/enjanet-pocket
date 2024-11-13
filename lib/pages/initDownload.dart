@@ -88,7 +88,7 @@ class _DbDownloadPageState extends ConsumerState<DbDownloadPage> {
               height: 10,
             ),
             Text(
-                "${e.bytesReceived! ~/ 1024 ~/ 1024}MB / ${e.totalBytes! ~/ 1024 ~/ 1024}MB}"),
+                "${e.bytesReceived! ~/ 1024} KB / ${e.totalBytes! ~/ 1024} KB}"),
             const SizedBox(
               height: 10,
             ),
